@@ -6,13 +6,13 @@
 /*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:22 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/25 11:45:29 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/08/25 12:03:27 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 
 int main() {
-	std::cout << "Hello, Webserv!" << std::endl;
+	std::cout << "Hello, Zehma Webserv!" << std::endl;
 	return 0;
 }
