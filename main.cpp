@@ -6,7 +6,7 @@
 /*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:22 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/26 15:05:10 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/08/26 15:16:23 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ int main(int argc, char **argv) {
 		parser.parse();
 		// parser.printTokens();
 		parser.printConfig();
-		Server server;
-		server.init("0.0.0.0", std::atoi(parser.getValue("listen").c_str()));
-		server.run();
+		// Server server;
+		// server.init("0.0.0.0", std::atoi(parser.getValue("listen").c_str()));
+		// server.run();
 	}
 	catch (const std::exception &e) {
 		std::cerr << "Error: " << e.what() << std::endl;

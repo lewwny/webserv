@@ -11,6 +11,7 @@ ConfigParse::ConfigParse(const std::string &configFile) : _configFile(configFile
 	_identifiers.push_back("listen");
 	_identifiers.push_back("server_name");
 	_identifiers.push_back("index");
+	_identifiers.push_back("error_page");
 }
 
 ConfigParse::~ConfigParse() {}
@@ -40,6 +41,19 @@ void ConfigParse::checkListenPort(const std::string &portStr) const {
 	if (port < 1 || port > 65535) {
 		throw std::runtime_error("Port number out of range: " + portStr);
 	}
+}
+
+void ConfigParse::checkErrorCode(const std::string &codeStr) const {
+	for (size_t i = 0; i < codeStr.size(); ++i) {
+		if (!isdigit(codeStr[i])) {
+			throw std::runtime_error("Invalid error code: " + codeStr);
+		}
+	}
+	if (codeStr.size() != 3)
+		throw std::runtime_error("Error code must be 3 digits: " + codeStr);
+	int code = std::atoi(codeStr.c_str());
+	if (code < 100 || code > 599)
+		throw std::runtime_error("Error code out of range (100-599): " + codeStr);
 }
 
 void ConfigParse::tokenize() {
@@ -137,6 +151,12 @@ void ConfigParse::checkConfig(std::map<std::string, std::string> &config) {
 	it = config.find("index");
 	if (it == config.end())
 		throw std::runtime_error("Missing 'index' directive in server block");
+	for (std::map<std::string, std::string>::const_iterator it = config.begin(); it != config.end(); ++it) {
+		if (it->first.find("error_page") == 0) {
+			std::string codeStr = it->first.substr(11); // after "error_page "
+			checkErrorCode(codeStr);
+		}
+	}
 }
 
 void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
@@ -152,6 +172,14 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 			throw std::runtime_error("Expected value after identifier '" + key + "' at line " + to_string98(_tokens[i - 1].line));
 		std::string value = _tokens[i].value;
 		i++;
+		if (_tokens[i].type == T_STRING && _tokens[i - 2].value == "error_page") {
+			value = _tokens[i].value;
+			key += " " + _tokens[i - 1].value;
+			i++;
+		}
+		else if (_tokens[i].type != T_STRING && _tokens[i - 2].value == "error_page") {
+			throw std::runtime_error("Expected 2 string after 'error_page' at line " + to_string98(_tokens[i - 1].line));
+		}
 		if (i >= _tokens.size() || _tokens[i].type != T_SEMI)
 			throw std::runtime_error("Expected ';' after value '" + value + "' at line " + to_string98(_tokens[i - 1].line));
 		i++;
