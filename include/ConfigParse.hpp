@@ -24,16 +24,20 @@ class ConfigParse {
 public:
 	ConfigParse(const std::string &configFile);
 	~ConfigParse();
-	// void parse();
+	void parse();
 	std::string getValue(const std::string &key) const;
-	void								loadFile();
-	void								tokenize();
 	void								printTokens();
+	void								printConfig() const;
 private:
-	std::string							_configFile;
-	std::string							_fileContent;
-	std::vector<Token>					_tokens;
-	std::map<std::string, std::string>	_config;
+	void												loadFile();
+	void												tokenize();
+	void												parseServerBlock(size_t &i, size_t &serverCount);
+	bool												isIdentifier(const std::string &str) const;
+	std::string											_configFile;
+	std::string											_fileContent;
+	std::vector<Token>									_tokens;
+	std::vector<std::string>							_identifiers;
+	std::vector<std::map<std::string, std::string> >	_config;
 };
 
 #endif

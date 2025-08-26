@@ -6,7 +6,7 @@
 #    By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 11:17:35 by lengarci          #+#    #+#              #
-#    Updated: 2025/08/26 10:44:14 by lengarci         ###   ########.fr        #
+#    Updated: 2025/08/26 14:38:23 by lengarci         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 NAME		=	webserv
 CC			=	g++
-CFLAGS		=	-Wall -Wextra -Werror -std=c++98
+CFLAGS		=	-Wall -Wextra -Werror -std=c++98 -g3
 RM			=	rm -f
 DIR_OBJ		=	.obj/
 SRCS		=	main.cpp \

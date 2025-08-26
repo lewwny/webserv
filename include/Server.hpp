@@ -6,7 +6,7 @@
 /*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:51 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/26 10:25:46 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/08/26 12:09:38 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <fstream>
+#include <algorithm>
 // #include "Parser.hpp"   // depends on P2
 // #include "Response.hpp" // depends on P2
 
