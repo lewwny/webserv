@@ -1,0 +1,16 @@
+.resume {
+	color: red;
+	font-size: 44px;
+}
+
+.header {
+	outline: 2px solid green;
+	padding: 5px 50px 5px 5px;
+}
+
+body {
+	height: 100vh;
+	background-image: url("smurf_images.jpeg");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
