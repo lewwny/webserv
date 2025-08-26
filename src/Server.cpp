@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:46:04 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/25 17:27:12 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/26 10:21:51 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void Server::init( const std::string &host, int port )
 	pfd.events = POLLIN;
 	_pfds.push_back(pfd);
 
-	std::cout << "[Server] Listening on " << host << ":" << port << std::endl;
+	std::cout << "[Server] Listening on " << port << std::endl;
 }
 
 void	Server::run( void )

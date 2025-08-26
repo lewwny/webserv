@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
+#    By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 11:17:35 by lengarci          #+#    #+#              #
-#    Updated: 2025/08/25 12:05:28 by macauchy         ###   ########.fr        #
+#    Updated: 2025/08/26 10:44:14 by lengarci         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,9 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98
 RM			=	rm -f
 DIR_OBJ		=	.obj/
 SRCS		=	main.cpp \
-				src/Server.cpp 
+				src/Server.cpp src/ConfigParse.cpp
 OBJS		=	$(addprefix $(DIR_OBJ), $(SRCS:.cpp=.o))
-HEADER		=	include/Server.hpp
+HEADER		=	include/Server.hpp include/ConfigParse.hpp
 
 all:		$(NAME)
 

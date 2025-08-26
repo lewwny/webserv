@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:51 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/25 15:30:43 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/26 10:25:46 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 #include <cerrno>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <stdexcept>
+#include <sstream>
+#include <fstream>
 // #include "Parser.hpp"   // depends on P2
 // #include "Response.hpp" // depends on P2
 
