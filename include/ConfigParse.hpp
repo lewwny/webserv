@@ -33,6 +33,8 @@ private:
 	void												tokenize();
 	void												parseServerBlock(size_t &i, size_t &serverCount);
 	bool												isIdentifier(const std::string &str) const;
+	void												checkListenPort(const std::string &portStr) const;
+	void												checkConfig(std::map<std::string, std::string> &config);
 	std::string											_configFile;
 	std::string											_fileContent;
 	std::vector<Token>									_tokens;

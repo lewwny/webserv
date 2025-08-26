@@ -30,6 +30,18 @@ bool ConfigParse::isIdentifier(const std::string &str) const {
 	return std::find(_identifiers.begin(), _identifiers.end(), str) != _identifiers.end();
 }
 
+void ConfigParse::checkListenPort(const std::string &portStr) const {
+	for (size_t i = 0; i < portStr.size(); ++i) {
+		if (!isdigit(portStr[i])) {
+			throw std::runtime_error("Invalid port number: " + portStr);
+		}
+	}
+	int port = std::atoi(portStr.c_str());
+	if (port < 1 || port > 65535) {
+		throw std::runtime_error("Port number out of range: " + portStr);
+	}
+}
+
 void ConfigParse::tokenize() {
 	size_t pos = 0;
 	int line = 1;
@@ -110,6 +122,23 @@ void ConfigParse::printConfig() const {
 	}
 }
 
+void ConfigParse::checkConfig(std::map<std::string, std::string> &config) {
+	std::map<std::string, std::string>::const_iterator it;
+
+	it = config.find("listen");
+	if (it == config.end())
+		throw std::runtime_error("Missing 'listen' directive in server block");
+	checkListenPort(it->second);
+
+	it = config.find("server_name");
+	if (it == config.end())
+		config["server_name"] = "localhost";
+
+	it = config.find("index");
+	if (it == config.end())
+		throw std::runtime_error("Missing 'index' directive in server block");
+}
+
 void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 	if (i >= _tokens.size() || _tokens[i].type != T_LBRACE)
 		throw std::runtime_error("Expected '{' after 'server' at line " + to_string98(_tokens[i - 1].line));
@@ -133,6 +162,7 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 	if (i >= _tokens.size() || _tokens[i].type != T_RBRACE)
 		throw std::runtime_error("Expected '}' to close server block at line " + to_string98(_tokens[i - 1].line));
 	i++;
+	checkConfig(_config[serverCount]);
 }
 
 void ConfigParse::parse() {
