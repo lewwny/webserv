@@ -12,6 +12,9 @@ ConfigParse::ConfigParse(const std::string &configFile) : _configFile(configFile
 	_identifiers.push_back("server_name");
 	_identifiers.push_back("index");
 	_identifiers.push_back("error_page");
+	_identifiers.push_back("location");
+	_locationIdentifiers.push_back("autoindex");
+	_locationIdentifiers.push_back("allow_methods");
 }
 
 ConfigParse::~ConfigParse() {}
@@ -29,6 +32,10 @@ void ConfigParse::loadFile() {
 
 bool ConfigParse::isIdentifier(const std::string &str) const {
 	return std::find(_identifiers.begin(), _identifiers.end(), str) != _identifiers.end();
+}
+
+bool ConfigParse::isLocationIdentifier(const std::string &str) const {
+	return std::find(_locationIdentifiers.begin(), _locationIdentifiers.end(), str) != _locationIdentifiers.end();
 }
 
 void ConfigParse::checkListenPort(const std::string &portStr) const {
@@ -70,7 +77,7 @@ void ConfigParse::tokenize() {
 				pos++;
 			continue;
 		}
-		if (isalnum(_fileContent[pos])) {
+		if (isalnum(_fileContent[pos]) || _fileContent[pos] == '/' || _fileContent[pos] == '.') {
 			size_t start = pos;
 			while (pos < _fileContent.size() && (isalnum(_fileContent[pos])
 			|| _fileContent[pos] == '_' || _fileContent[pos] == '.'
@@ -79,6 +86,8 @@ void ConfigParse::tokenize() {
 			std::string ident = _fileContent.substr(start, pos - start);
 			if (isIdentifier(ident))
 				_tokens.push_back(Token(T_IDENT, ident, line));
+			else if (isLocationIdentifier(ident))
+				_tokens.push_back(Token(T_LIDENT, ident, line));
 			else
 				_tokens.push_back(Token(T_STRING, ident, line));
 			continue;
@@ -133,6 +142,14 @@ void ConfigParse::printConfig() const {
 		for (std::map<std::string, std::string>::const_iterator it = _config[s].begin(); it != _config[s].end(); ++it) {
 			std::cout << "  " << it->first << " = " << it->second << std::endl;
 		}
+		if (s < _locations.size() && !_locations[s].empty()) {
+			for (size_t l = 0; l < _locations[s].size(); ++l) {
+				std::cout << "  Location " << l << " config:" << std::endl;
+				for (std::map<std::string, std::string>::const_iterator lit = _locations[s][l].begin(); lit != _locations[s][l].end(); ++lit) {
+					std::cout << "    " << lit->first << " = " << lit->second << std::endl;
+				}
+			}
+		}
 	}
 }
 
@@ -159,6 +176,45 @@ void ConfigParse::checkConfig(std::map<std::string, std::string> &config) {
 	}
 }
 
+void ConfigParse::parseLocationBlock(size_t &i, size_t &serverCount) {
+	if (i >= _tokens.size() || _tokens[i].type != T_STRING)
+		throw std::runtime_error("Expected path after 'location' at line " + to_string98(_tokens[i - 1].line));
+	std::string path = _tokens[i].value;
+	i++;
+	if (i >= _tokens.size() || _tokens[i].type != T_LBRACE)
+		throw std::runtime_error("Expected '{' after 'location' at line " + to_string98(_tokens[i - 1].line));
+	i++;
+	std::map<std::string, std::string> locationConfig;
+	while (i < _tokens.size() && _tokens[i].type != T_RBRACE) {
+		if (_tokens[i].type != T_LIDENT)
+			throw std::runtime_error("Expected identifier in location block at line " + to_string98(_tokens[i].line));
+		std::string key = _tokens[i].value;
+		i++;
+		if (i >= _tokens.size() || (_tokens[i].type != T_STRING && _tokens[i].type != T_LIDENT))
+			throw std::runtime_error("Expected value after identifier '" + key + "' at line " + to_string98(_tokens[i - 1].line));
+		std::string value = _tokens[i].value;
+		i++;
+		while (i < _tokens.size() && _tokens[i].type != T_SEMI)
+		{
+			if (key == "allow_methods" && _tokens[i].type == T_STRING) {
+				value += " " + _tokens[i].value;
+				i++;
+			}
+			else
+				throw std::runtime_error("Expected ';' after value '" + value + "' at line " + to_string98(_tokens[i - 1].line));
+		}
+		i++;
+		locationConfig[key] = value;
+	}
+	if (i >= _tokens.size() || _tokens[i].type != T_RBRACE)
+		throw std::runtime_error("Expected '}' to close location block at line " + to_string98(_tokens[i - 1].line));
+	i++;
+	if (serverCount >= _locations.size())
+		_locations.push_back(std::vector<std::map<std::string, std::string> >());
+	locationConfig["path"] = path;
+	_locations[serverCount].push_back(locationConfig);
+}
+
 void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 	if (i >= _tokens.size() || _tokens[i].type != T_LBRACE)
 		throw std::runtime_error("Expected '{' after 'server' at line " + to_string98(_tokens[i - 1].line));
@@ -168,6 +224,10 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 			throw std::runtime_error("Expected identifier in server block at line " + to_string98(_tokens[i].line));
 		std::string key = _tokens[i].value;
 		i++;
+		if (key == "location") {
+			parseLocationBlock(i, serverCount);
+			continue;
+		}
 		if (i >= _tokens.size() || (_tokens[i].type != T_STRING && _tokens[i].type != T_IDENT))
 			throw std::runtime_error("Expected value after identifier '" + key + "' at line " + to_string98(_tokens[i - 1].line));
 		std::string value = _tokens[i].value;

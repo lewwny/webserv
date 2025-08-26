@@ -6,6 +6,7 @@
 enum TokenType {
 	T_EOF,
 	T_IDENT,
+	T_LIDENT,
 	T_STRING,
 	T_LBRACE,
 	T_RBRACE,
@@ -29,18 +30,22 @@ public:
 	void								printTokens();
 	void								printConfig() const;
 private:
-	void												loadFile();
-	void												tokenize();
-	void												parseServerBlock(size_t &i, size_t &serverCount);
-	bool												isIdentifier(const std::string &str) const;
-	void												checkListenPort(const std::string &portStr) const;
-	void												checkErrorCode(const std::string &codeStr) const;
-	void												checkConfig(std::map<std::string, std::string> &config);
-	std::string											_configFile;
-	std::string											_fileContent;
-	std::vector<Token>									_tokens;
-	std::vector<std::string>							_identifiers;
+	void						loadFile();
+	void						tokenize();
+	void						parseServerBlock(size_t &i, size_t &serverCount);
+	void						parseLocationBlock(size_t &i, size_t &serverCount);
+	bool						isIdentifier(const std::string &str) const;
+	bool						isLocationIdentifier(const std::string &str) const;
+	void						checkListenPort(const std::string &portStr) const;
+	void						checkErrorCode(const std::string &codeStr) const;
+	void						checkConfig(std::map<std::string, std::string> &config);
+	std::string					_configFile;
+	std::string					_fileContent;
+	std::vector<Token>			_tokens;
+	std::vector<std::string>	_identifiers;
+	std::vector<std::string>	_locationIdentifiers;
 	std::vector<std::map<std::string, std::string> >	_config;
+	std::vector<std::vector<std::map<std::string, std::string> > > _locations;
 };
 
 #endif
