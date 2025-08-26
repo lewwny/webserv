@@ -1,16 +1,26 @@
 .resume {
 	color: red;
 	font-size: 44px;
+	display: flex;
+	justify-content: center;
+	font-weight: bold;
 }
 
 .header {
 	outline: 2px solid green;
 	padding: 5px 50px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	background-color: aqua;
 }
 
 body {
 	height: 100vh;
 	background-image: url("smurf_images.jpeg");
 	background-repeat: no-repeat;
-	background-size: 100% 100%;
+	background-size: contain;
+	background-position: center;
+	display: flex;
+	align-items: center;
+	justify-content: ;
+	/* background-size: 100% 100%; */
 }
