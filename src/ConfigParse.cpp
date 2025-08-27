@@ -176,6 +176,15 @@ void ConfigParse::checkConfig(std::map<std::string, std::string> &config) {
 	}
 }
 
+static void CheckDuplicateLocation(const std::string &path, const std::vector<std::map<std::string, std::string> > &locations) {
+	for (size_t i = 0; i < locations.size(); ++i) {
+		std::map<std::string, std::string>::const_iterator it = locations[i].find("path");
+		if (it != locations[i].end() && it->second == path) {
+			throw std::runtime_error("Duplicate location path: " + path);
+		}
+	}
+}
+
 void ConfigParse::parseLocationBlock(size_t &i, size_t &serverCount) {
 	if (i >= _tokens.size() || _tokens[i].type != T_STRING)
 		throw std::runtime_error("Expected path after 'location' at line " + to_string98(_tokens[i - 1].line));
@@ -193,6 +202,8 @@ void ConfigParse::parseLocationBlock(size_t &i, size_t &serverCount) {
 		if (i >= _tokens.size() || (_tokens[i].type != T_STRING && _tokens[i].type != T_LIDENT))
 			throw std::runtime_error("Expected value after identifier '" + key + "' at line " + to_string98(_tokens[i - 1].line));
 		std::string value = _tokens[i].value;
+		if (key == "autoindex" && value != "on" && value != "off")
+			throw std::runtime_error("Invalid value for autoindex: " + value + " at line " + to_string98(_tokens[i].line));
 		i++;
 		while (i < _tokens.size() && _tokens[i].type != T_SEMI)
 		{
@@ -204,6 +215,8 @@ void ConfigParse::parseLocationBlock(size_t &i, size_t &serverCount) {
 				throw std::runtime_error("Expected ';' after value '" + value + "' at line " + to_string98(_tokens[i - 1].line));
 		}
 		i++;
+		if (locationConfig.find(key) != locationConfig.end())
+			throw std::runtime_error("Duplicate directive '" + key + "' in location block at line " + to_string98(_tokens[i - 1].line));
 		locationConfig[key] = value;
 	}
 	if (i >= _tokens.size() || _tokens[i].type != T_RBRACE)
@@ -211,6 +224,7 @@ void ConfigParse::parseLocationBlock(size_t &i, size_t &serverCount) {
 	i++;
 	if (serverCount >= _locations.size())
 		_locations.push_back(std::vector<std::map<std::string, std::string> >());
+	CheckDuplicateLocation(path, _locations[serverCount]);
 	locationConfig["path"] = path;
 	_locations[serverCount].push_back(locationConfig);
 }
@@ -245,6 +259,8 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 		i++;
 		if (serverCount >= _config.size())
 			_config.push_back(std::map<std::string, std::string>());
+		if (_config[serverCount].find(key) != _config[serverCount].end())
+			throw std::runtime_error("Duplicate directive '" + key + "' in server block at line " + to_string98(_tokens[i - 1].line));
 		_config[serverCount][key] = value;
 	}
 	if (i >= _tokens.size() || _tokens[i].type != T_RBRACE)
