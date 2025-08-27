@@ -117,9 +117,10 @@ void ConfigParse::tokenize() {
 
 void ConfigParse::printTokens() {
 	std::vector<std::string> tokenTypeNames;
-	tokenTypeNames.resize(6);
+	tokenTypeNames.resize(7);
 	tokenTypeNames[T_EOF] = "T_EOF";
 	tokenTypeNames[T_IDENT] = "T_IDENT";
+	tokenTypeNames[T_LIDENT] = "T_LIDENT";
 	tokenTypeNames[T_STRING] = "T_STRING";
 	tokenTypeNames[T_LBRACE] = "T_LBRACE";
 	tokenTypeNames[T_RBRACE] = "T_RBRACE";
