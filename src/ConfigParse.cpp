@@ -13,6 +13,7 @@ ConfigParse::ConfigParse(const std::string &configFile) : _configFile(configFile
 	_identifiers.push_back("index");
 	_identifiers.push_back("error_page");
 	_identifiers.push_back("location");
+	_identifiers.push_back("client_max_body_size");
 	_locationIdentifiers.push_back("autoindex");
 	_locationIdentifiers.push_back("allow_methods");
 }
