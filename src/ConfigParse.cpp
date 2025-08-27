@@ -180,6 +180,21 @@ static void CheckDuplicateLocation(const std::string &path, const std::vector<st
 	}
 }
 
+void ConfigParse::checkClientMaxBodySize(const std::string &sizeStr) const {
+	std::cout << "DEBUG: Checking client_max_body_size: " << sizeStr << std::endl;
+	for (size_t i = 0; i < sizeStr.size() - 1; ++i) {
+		if (!isdigit(sizeStr[i])) {
+			throw std::runtime_error("Invalid client_max_body_size: " + sizeStr);
+		}
+	}
+	if (!isdigit(sizeStr[sizeStr.size() - 1]) && sizeStr[sizeStr.size() - 1] != 'K' && sizeStr[sizeStr.size() - 1] != 'M' && sizeStr[sizeStr.size() - 1] != 'G') {
+		throw std::runtime_error("Invalid client_max_body_size: " + sizeStr);
+	}
+	long size = std::atol(sizeStr.c_str());
+	if (size < 0)
+		throw std::runtime_error("client_max_body_size must be non-negative: " + sizeStr);
+}
+
 void ConfigParse::parseLocationBlock(size_t &i, size_t &serverCount) {
 	if (i >= _tokens.size() || _tokens[i].type != T_STRING)
 		throw std::runtime_error("Expected path after 'location' at line " + to_string98(_tokens[i - 1].line));
@@ -246,6 +261,8 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 			key += " " + _tokens[i - 1].value;
 			i++;
 		}
+		if (key == "client_max_body_size")
+			checkClientMaxBodySize(value);
 		else if (_tokens[i].type != T_STRING && _tokens[i - 2].value == "error_page") {
 			throw std::runtime_error("Expected 2 string after 'error_page' at line " + to_string98(_tokens[i - 1].line));
 		}

@@ -41,6 +41,7 @@ private:
 	void						checkListenPort(const std::string &portStr) const;
 	void						checkErrorCode(const std::string &codeStr) const;
 	void						checkConfig(std::map<std::string, std::string> &config);
+	void						checkClientMaxBodySize(const std::string &sizeStr) const;
 	std::string					_configFile;
 	std::string					_fileContent;
 	std::vector<Token>			_tokens;
