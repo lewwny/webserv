@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:16:16 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/26 14:17:54 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/27 15:23:38 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,31 @@ void	Request::setVersion( const std::string &version )
 	_version = version;
 }
 
+void	Request::setPath( const std::string &path )
+{
+	_path = path;
+}
+
+void	Request::setQuery( const std::string &query )
+{
+	_query = query;
+}
+
+void	Request::setError( void )
+{
+	_error = true;
+}
+
+void	Request::setErrorCode( int code )
+{
+	_errorCode = code;
+}
+
+void	Request::setErrorMessage( const std::string &message )
+{
+	_errorMessage = message;
+}
+
 void	Request::appendToBody( const std::string &data )
 {
 	_body += data;
@@ -112,37 +137,37 @@ int	Request::getErrorCode( void ) const
 	return (_errorCode);
 }
 
-std::string	Request::getErrorMessage( void ) const
+const std::string	&Request::getErrorMessage( void ) const
 {
 	return (_errorMessage);
 }
 
-std::string	Request::getMethod( void ) const
+const std::string	&Request::getMethod( void ) const
 {
 	return (_method);
 }
 
-std::string	Request::getUri( void ) const
+const std::string	&Request::getUri( void ) const
 {
 	return (_uri);
 }
 
-std::string	Request::getPath( void ) const
+const std::string	&Request::getPath( void ) const
 {
 	return (_path);
 }
 
-std::string	Request::getQuery( void ) const
+const std::string	&Request::getQuery( void ) const
 {
 	return (_query);
 }
 
-std::string	Request::getVersion( void ) const
+const std::string	&Request::getVersion( void ) const
 {
 	return (_version);
 }
 
-std::string	Request::getBody( void ) const
+const std::string	&Request::getBody( void ) const
 {
 	return (_body);
 }

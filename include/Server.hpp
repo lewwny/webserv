@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:51 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/25 15:30:43 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/27 15:25:56 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@
 #include <cerrno>
 #include <sys/socket.h>
 #include <netinet/in.h>
-// #include "Parser.hpp"   // depends on P2
+#include "Parser.hpp"   // depends on P2
+#include "Request.hpp"  // depends on P2
 // #include "Response.hpp" // depends on P2
 
 struct Connection

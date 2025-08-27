@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 11:43:17 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/26 15:43:53 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/27 15:23:15 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,25 @@ class Request
 		void	setMethod( const std::string& method );
 		void	setUri( const std::string& uri );
 		void	setVersion( const std::string& version );
+		void	setPath( const std::string& path );
+		void	setQuery( const std::string& query );
 		void	appendToBody( const std::string& data );
+		void	setError( void );
+		void	setErrorCode( int code );
+		void	setErrorMessage( const std::string &message );
 		void	markComplete( void );
 		bool	isComplete( void ) const;
 		bool	getError( void ) const;
 		int		getErrorCode( void ) const;
 		void	reset( void );
 
-		std::string	getErrorMessage( void ) const;
-		std::string	getMethod( void ) const;
-		std::string	getUri( void ) const;
-		std::string	getPath( void ) const;
-		std::string	getQuery( void ) const;
-		std::string	getVersion( void ) const;
-		std::string	getBody( void ) const;
+		const std::string	&getErrorMessage( void ) const;
+		const std::string	&getMethod( void ) const;
+		const std::string	&getUri( void ) const;
+		const std::string	&getPath( void ) const;
+		const std::string	&getQuery( void ) const;
+		const std::string	&getVersion( void ) const;
+		const std::string	&getBody( void ) const;
 
 	private:
 		std::string	_method;	// GET, POST, DELETE, etc.
