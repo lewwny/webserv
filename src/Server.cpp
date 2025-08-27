@@ -2,12 +2,10 @@
 
 Server::Server( void ) : _listenFd(-1)
 {
-	std::cout << "Server constructor called" << std::endl;
 }
 
 Server::~Server( void )
 {
-	std::cout << "Server destructor called" << std::endl;
 	if (_listenFd != -1)
 		close(_listenFd);
 }

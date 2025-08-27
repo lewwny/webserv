@@ -6,7 +6,7 @@
 /*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:22 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/27 09:56:07 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/08/27 13:48:44 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
 	try {
 		ConfigParse parser(argc == 2 ? argv[1] : "conf/default.conf");
 		parser.parse();
-		parser.printTokens();
-		parser.printConfig();
+		// parser.printTokens();
+		// parser.printConfig();
 		Server server;
 		server.init("0.0.0.0", std::atoi(parser.getServerConfig(0).at("listen").c_str()));
 		server.run();

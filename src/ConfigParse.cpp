@@ -181,7 +181,6 @@ static void CheckDuplicateLocation(const std::string &path, const std::vector<st
 }
 
 void ConfigParse::checkClientMaxBodySize(const std::string &sizeStr) const {
-	std::cout << "DEBUG: Checking client_max_body_size: " << sizeStr << std::endl;
 	for (size_t i = 0; i < sizeStr.size() - 1; ++i) {
 		if (!isdigit(sizeStr[i])) {
 			throw std::runtime_error("Invalid client_max_body_size: " + sizeStr);
