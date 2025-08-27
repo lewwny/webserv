@@ -26,9 +26,11 @@ public:
 	ConfigParse(const std::string &configFile);
 	~ConfigParse();
 	void parse();
-	std::string getValue(const std::string &key) const;
-	void								printTokens();
-	void								printConfig() const;
+	int getServerCount() const;
+	const std::map<std::string, std::string> &getServerConfig(size_t index) const;
+	const std::vector<std::map<std::string, std::string> > &getLocationConfig(size_t index) const;
+	void printTokens();
+	void printConfig() const;
 private:
 	void						loadFile();
 	void						tokenize();

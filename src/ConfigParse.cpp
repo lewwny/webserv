@@ -20,6 +20,9 @@ ConfigParse::ConfigParse(const std::string &configFile) : _configFile(configFile
 ConfigParse::~ConfigParse() {}
 
 void ConfigParse::loadFile() {
+	if (_configFile.empty() || _configFile.size() < 6 || _configFile.substr(_configFile.size() - 5) != ".conf") {
+		throw std::runtime_error("Config file path is invalid");
+	}
 	std::ifstream file(_configFile.c_str());
 	if (!file.is_open()) {
 		throw std::runtime_error("Could not open config file: " + _configFile);
@@ -110,16 +113,6 @@ void ConfigParse::tokenize() {
 		throw std::runtime_error(std::string("Unexpected character: ") + _fileContent[pos]);
 	}
 	_tokens.push_back(Token(T_EOF, "", line));
-}
-
-std::string ConfigParse::getValue(const std::string &key) const {
-	for (size_t s = 0; s < _config.size(); ++s) {
-		std::map<std::string, std::string>::const_iterator it = _config[s].find(key);
-		if (it != _config[s].end()) {
-			return it->second;
-		}
-	}
-	throw std::runtime_error("Key not found: " + key);
 }
 
 void ConfigParse::printTokens() {
@@ -286,4 +279,20 @@ void ConfigParse::parse() {
 			break;
 		serverCount++;
 	}
+}
+
+int ConfigParse::getServerCount() const {
+	return _config.size();
+}
+
+const std::map<std::string, std::string> &ConfigParse::getServerConfig(size_t index) const {
+	if (index >= _config.size())
+		throw std::runtime_error("Server index out of range");
+	return _config[index];
+}
+
+const std::vector<std::map<std::string, std::string> > &ConfigParse::getLocationConfig(size_t index) const {
+	if (index >= _locations.size())
+		throw std::runtime_error("Location index out of range");
+	return _locations[index];
 }
