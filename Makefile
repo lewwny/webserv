@@ -6,7 +6,7 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 11:17:35 by lengarci          #+#    #+#              #
-#    Updated: 2025/08/25 12:05:28 by macauchy         ###   ########.fr        #
+#    Updated: 2025/08/28 15:37:37 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,15 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98
 RM			=	rm -f
 DIR_OBJ		=	.obj/
 SRCS		=	main.cpp \
-				src/Server.cpp 
+				src/Server.cpp \
+				src/Request.cpp \
+				src/Parser.cpp	\
+				src/Response.cpp
 OBJS		=	$(addprefix $(DIR_OBJ), $(SRCS:.cpp=.o))
-HEADER		=	include/Server.hpp
+HEADER		=	include/Server.hpp \
+				include/Request.hpp \
+				include/Parser.hpp \
+				include/Response.hpp
 
 all:		$(NAME)
 
@@ -35,6 +41,7 @@ $(DIR_OBJ)%.o:	%.cpp $(HEADER)
 
 clean:
 		$(RM) -r $(DIR_OBJ)
+		$(RM) 
 		@printf "\033[0;32mObject files removed\033[0m\n"
 
 fclean:		clean
@@ -44,4 +51,25 @@ fclean:		clean
 re:	fclean
 		@make all --silent
 
-.PHONY:		all clean fclean re
+# Test targets (separate binaries to avoid multiple mains)
+PARSER_TEST_BIN = tests/run_parser_tests
+REQUEST_TEST_BIN = tests/run_request_tests
+PARSER_TEST_SRC = tests/TestParser.cpp
+REQUEST_TEST_SRC = tests/TestRequest.cpp
+
+$(PARSER_TEST_BIN): $(PARSER_TEST_SRC) src/Parser.cpp src/Request.cpp tests/test_harness.hpp
+	@mkdir -p tests
+	$(CC) $(CFLAGS) -I./include -o $(PARSER_TEST_BIN) $(PARSER_TEST_SRC) src/Parser.cpp src/Request.cpp
+	@printf "\033[0;32mTests built: %s\033[0m\n" $(PARSER_TEST_BIN)
+
+$(REQUEST_TEST_BIN): $(REQUEST_TEST_SRC) src/Request.cpp tests/test_harness.hpp
+	@mkdir -p tests
+	$(CC) $(CFLAGS) -I./include -o $(REQUEST_TEST_BIN) $(REQUEST_TEST_SRC) src/Request.cpp
+	@printf "\033[0;32mTests built: %s\033[0m\n" $(REQUEST_TEST_BIN)
+
+.PHONY:		all clean fclean re test
+test: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN)
+	@printf "\033[0;34mRunning parser tests:\033[0m\n"
+	./$(PARSER_TEST_BIN)
+	@printf "\033[0;34mRunning request tests:\033[0m\n"
+	./$(REQUEST_TEST_BIN)
