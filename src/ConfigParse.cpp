@@ -14,8 +14,20 @@ ConfigParse::ConfigParse(const std::string &configFile) : _configFile(configFile
 	_identifiers.push_back("error_page");
 	_identifiers.push_back("location");
 	_identifiers.push_back("client_max_body_size");
+	_identifiers.push_back("root");
 	_locationIdentifiers.push_back("autoindex");
 	_locationIdentifiers.push_back("allow_methods");
+	_locationIdentifiers.push_back("upload_enable");
+	_locationIdentifiers.push_back("upload_store");
+	_locationIdentifiers.push_back("rootl");
+	_locationIdentifiers.push_back("return");
+	_locationIdentifiers.push_back("cgi_extension");
+	_locationIdentifiers.push_back("cgi_path");
+	_locationIdentifiers.push_back("cgi_index");
+	_locationIdentifiers.push_back("cgi_working_directory");
+	_locationIdentifiers.push_back("cgi_pass_path_info");
+	_locationIdentifiers.push_back("indexl");
+	_locationIdentifiers.push_back("client_max_body_sizel");
 }
 
 ConfigParse::~ConfigParse() {}
@@ -81,7 +93,7 @@ void ConfigParse::tokenize() {
 				pos++;
 			continue;
 		}
-		if (isalnum(_fileContent[pos]) || _fileContent[pos] == '/' || _fileContent[pos] == '.') {
+		if (isalnum(_fileContent[pos]) || _fileContent[pos] == '/' || _fileContent[pos] == '.' || _fileContent[pos] == '_') {
 			size_t start = pos;
 			while (pos < _fileContent.size() && (isalnum(_fileContent[pos])
 			|| _fileContent[pos] == '_' || _fileContent[pos] == '.'
@@ -208,18 +220,23 @@ void ConfigParse::parseLocationBlock(size_t &i, size_t &serverCount) {
 	std::map<std::string, std::string> locationConfig;
 	while (i < _tokens.size() && _tokens[i].type != T_RBRACE) {
 		if (_tokens[i].type != T_LIDENT)
-			throw std::runtime_error("Expected identifier in location block at line " + to_string98(_tokens[i].line));
+			throw std::runtime_error("Expected identifier " + _tokens[i].value + " in location block at line " + to_string98(_tokens[i].line));
 		std::string key = _tokens[i].value;
 		i++;
 		if (i >= _tokens.size() || (_tokens[i].type != T_STRING && _tokens[i].type != T_LIDENT))
 			throw std::runtime_error("Expected value after identifier '" + key + "' at line " + to_string98(_tokens[i - 1].line));
 		std::string value = _tokens[i].value;
-		if (key == "autoindex" && value != "on" && value != "off")
-			throw std::runtime_error("Invalid value for autoindex: " + value + " at line " + to_string98(_tokens[i].line));
+		if ((key == "autoindex" || key == "upload_enable" || key == "cgi_pass_path_info")&& value != "on" && value != "off")
+			throw std::runtime_error("Invalid value for autoindex or upload_enable or cgi_pass_path_info: " + value + " at line " + to_string98(_tokens[i].line));
 		i++;
+		if (_tokens[i].type == T_STRING && _tokens[i - 2].value == "return") {
+			value = _tokens[i].value;
+			key += " " + _tokens[i - 1].value;
+			i++;
+		}
 		while (i < _tokens.size() && _tokens[i].type != T_SEMI)
 		{
-			if (key == "allow_methods" && _tokens[i].type == T_STRING) {
+			if ((key == "allow_methods") && _tokens[i].type == T_STRING) {
 				value += " " + _tokens[i].value;
 				i++;
 			}
@@ -229,6 +246,9 @@ void ConfigParse::parseLocationBlock(size_t &i, size_t &serverCount) {
 		i++;
 		if (locationConfig.find(key) != locationConfig.end())
 			throw std::runtime_error("Duplicate directive '" + key + "' in location block at line " + to_string98(_tokens[i - 1].line));
+		else if (_tokens[i].type != T_STRING && _tokens[i - 2].value == "return") {
+			throw std::runtime_error("Expected 2 string after 'return' at line " + to_string98(_tokens[i - 1].line));
+		}
 		locationConfig[key] = value;
 	}
 	if (i >= _tokens.size() || _tokens[i].type != T_RBRACE)
