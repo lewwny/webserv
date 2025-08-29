@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lenygarcia <lenygarcia@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:22 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/27 13:48:44 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/08/29 19:43:36 by lenygarcia       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ int main(int argc, char **argv) {
 		// parser.printTokens();
 		// parser.printConfig();
 		Server server;
-		server.init("0.0.0.0", std::atoi(parser.getServerConfig(0).at("listen").c_str()));
-		server.run();
+		server.init(parser.getServerConfig(0).at("host"), std::atoi(parser.getServerConfig(0).at("listen").c_str()));
+		// server.run();
 	}
 	catch (const std::exception &e) {
 		std::cerr << "Error: " << e.what() << std::endl;
