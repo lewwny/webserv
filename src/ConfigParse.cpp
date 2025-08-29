@@ -85,7 +85,7 @@ void ConfigParse::tokenize() {
 			size_t start = pos;
 			while (pos < _fileContent.size() && (isalnum(_fileContent[pos])
 			|| _fileContent[pos] == '_' || _fileContent[pos] == '.'
-			|| _fileContent[pos] == '-' || _fileContent[pos] == '/'))
+			|| _fileContent[pos] == '-' || _fileContent[pos] == '/' || _fileContent[pos] == ':'))
 				pos++;
 			std::string ident = _fileContent.substr(start, pos - start);
 			if (isIdentifier(ident))
@@ -169,6 +169,9 @@ void ConfigParse::checkConfig(std::map<std::string, std::string> &config) {
 			checkErrorCode(codeStr);
 		}
 	}
+	it = config.find("host");
+	if (it == config.end())
+		config["host"] = "0.0.0.0";
 }
 
 static void CheckDuplicateLocation(const std::string &path, const std::vector<std::map<std::string, std::string> > &locations) {
@@ -242,6 +245,8 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 	if (i >= _tokens.size() || _tokens[i].type != T_LBRACE)
 		throw std::runtime_error("Expected '{' after 'server' at line " + to_string98(_tokens[i - 1].line));
 	i++;
+	if (serverCount >= _config.size())
+		_config.push_back(std::map<std::string, std::string>());
 	while (i < _tokens.size() && _tokens[i].type != T_RBRACE) {
 		if (_tokens[i].type != T_IDENT)
 			throw std::runtime_error("Expected identifier in server block at line " + to_string98(_tokens[i].line));
@@ -262,14 +267,21 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 		}
 		if (key == "client_max_body_size")
 			checkClientMaxBodySize(value);
+		if (key == "listen")
+		{
+			if (value.find(':') != std::string::npos) {
+				size_t colonPos = value.find(':');
+				std::string host = value.substr(0, colonPos);
+				_config[serverCount]["host"] = host;
+				value = value.substr(colonPos + 1);
+			}
+		}
 		else if (_tokens[i].type != T_STRING && _tokens[i - 2].value == "error_page") {
 			throw std::runtime_error("Expected 2 string after 'error_page' at line " + to_string98(_tokens[i - 1].line));
 		}
 		if (i >= _tokens.size() || _tokens[i].type != T_SEMI)
 			throw std::runtime_error("Expected ';' after value '" + value + "' at line " + to_string98(_tokens[i - 1].line));
 		i++;
-		if (serverCount >= _config.size())
-			_config.push_back(std::map<std::string, std::string>());
 		if (_config[serverCount].find(key) != _config[serverCount].end())
 			throw std::runtime_error("Duplicate directive '" + key + "' in server block at line " + to_string98(_tokens[i - 1].line));
 		_config[serverCount][key] = value;
