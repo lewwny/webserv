@@ -6,13 +6,16 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:22 by lengarci          #+#    #+#             */
-/*   Updated: 2025/09/01 15:56:22 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 16:00:05 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include "include/Server.hpp"
 #include "include/ConfigParse.hpp"
+#include "include/Parser.hpp"
+#include "include/Request.hpp"
+
 
 int main(int argc, char **argv) {
 	(void)argv;
@@ -25,12 +28,6 @@ int main(int argc, char **argv) {
 		parser.parse();
 		// parser.printTokens();
 		// parser.printConfig();
-#include "include/Parser.hpp"
-#include "include/Request.hpp"
-
-int main() {
-	std::cout << "Hello, Zehma Webserv!" << std::endl;
-	try {
 		Server server;
 		server.init(parser.getServerConfig(0).at("host"), std::atoi(parser.getServerConfig(0).at("listen").c_str()));
 		server.run();

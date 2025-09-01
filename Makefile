@@ -6,7 +6,7 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 11:17:35 by lengarci          #+#    #+#              #
-#    Updated: 2025/09/01 16:01:15 by macauchy         ###   ########.fr        #
+#    Updated: 2025/09/01 16:06:18 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,14 @@ SRCS		=	main.cpp \
 				src/Server.cpp \
 				src/Request.cpp \
 				src/Parser.cpp	\
-				src/Response.cppsrc/ConfigParse.cpp
+				src/Response.cpp \
+				src/ConfigParse.cpp
 OBJS		=	$(addprefix $(DIR_OBJ), $(SRCS:.cpp=.o))
 HEADER		=	include/Server.hpp \
 				include/Request.hpp \
 				include/Parser.hpp \
-				include/Response.hpp include/ConfigParse.hpp
+				include/Response.hpp \
+				include/ConfigParse.hpp
 
 all:		$(NAME)
 
@@ -46,6 +48,7 @@ clean:
 
 fclean:		clean
 		$(RM) $(NAME)
+		$(RM) $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN)
 		@printf "\033[0;32m$(NAME) removed\033[0m\n"
 
 re:	fclean
@@ -67,7 +70,7 @@ $(REQUEST_TEST_BIN): $(REQUEST_TEST_SRC) src/Request.cpp tests/test_harness.hpp
 	$(CC) $(CFLAGS) -I./include -o $(REQUEST_TEST_BIN) $(REQUEST_TEST_SRC) src/Request.cpp
 	@printf "\033[0;32mTests built: %s\033[0m\n" $(REQUEST_TEST_BIN)
 
-testconfig:
+testconfig: all
 		@printf "\033[0;33mTesting empty file:\033[0m\n"
 		@-./webserv conf/bad/empty.conf
 		@printf "\033[0;33mTesting bad extension:\033[0m\n"
