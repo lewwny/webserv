@@ -30,6 +30,8 @@ ConfigParse::ConfigParse(const std::string &configFile) : _configFile(configFile
 	_locationIdentifiers.push_back("client_max_body_sizel");
 }
 
+ConfigParse::ConfigParse( void ) {}
+
 ConfigParse::~ConfigParse() {}
 
 void ConfigParse::loadFile() {

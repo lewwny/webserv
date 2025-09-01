@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:46:04 by lengarci          #+#    #+#             */
-/*   Updated: 2025/09/01 16:02:26 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:05:42 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,16 +140,18 @@ void	Server::handleRead( int fd )
 	std::cout << "[Debug] " << std::endl << _conns[fd].inBuffer << std::endl;
 	Parser parser;
 	parser.setLimits(8192, 1048576, 4096); // Example limits
+	// find limits in config 
 	if (parser.feed(_conns[fd].inBuffer))
 	{
 		Request req = parser.getRequest();
 		if (req.getError())
 		{
+			// Handle request error
 			_conns[fd].outBuffer = "HTTP/1.1 " + toString(req.getErrorCode()) + " " + req.getErrorMessage() + "\r\nContent-Length: 0\r\n\r\n";
 		}
 		else
 		{
-			// Simple echo response for demonstration
+			// Simple echo response for demonstration (TODO: real routing/handling)
 			std::string body = "You requested: " + req.getPath() + "\n";
 			_conns[fd].outBuffer = "HTTP/1.1 200 OK\r\nContent-Length: " + toString(body.length()) + "\r\n\r\n" + body;
 		}
@@ -224,5 +226,10 @@ void Server::closeConnection(int fd)
 		}
 	}
 	std::cout << "[Server] Connection closed, fd: " << fd << std::endl;
+}
+
+void	Server::setConfig(const ConfigParse& config)
+{
+	_config = config;
 }
 

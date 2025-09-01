@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:22 by lengarci          #+#    #+#             */
-/*   Updated: 2025/09/01 16:00:05 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 16:56:15 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int main(int argc, char **argv) {
 		// parser.printTokens();
 		// parser.printConfig();
 		Server server;
+		server.setConfig(parser);
 		server.init(parser.getServerConfig(0).at("host"), std::atoi(parser.getServerConfig(0).at("listen").c_str()));
 		server.run();
 	}

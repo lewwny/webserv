@@ -24,6 +24,7 @@ struct Token {
 class ConfigParse {
 public:
 	ConfigParse(const std::string &configFile);
+	ConfigParse( void );
 	~ConfigParse();
 	void parse();
 	int getServerCount() const;
