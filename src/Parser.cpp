@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:15:59 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/27 16:58:52 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:53:41 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -412,6 +412,13 @@ std::string	Parser::_normalizePath( const std::string &rawPath ) const
 			normalized += "/";
 	}
 	return normalized;
+}
+
+bool	Parser::_isHex( char c ) const
+{
+	return ( (c >= '0' && c <= '9') ||
+			 (c >= 'a' && c <= 'f') ||
+			 (c >= 'A' && c <= 'F') );
 }
 
 // ----------- TODO: Implement chunked body parsing methods ------------

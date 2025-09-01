@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 17:57:36 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/28 15:43:21 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 15:37:54 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,7 @@ std::string	Response::_canonicalHeaderKey( const std::string &key )
 	std::string	res = key;
 	bool		cap = true;
 
-	// Capitalize first letter and letters after hyphens
+	// Capitalize first letter and letters after hyphens (e.g., "content-type" -> "Content-Type")
 	for (size_t i = 0; i < res.size(); ++i)
 	{
 		if (res[i] == '-')

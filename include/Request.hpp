@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 11:43:17 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/27 15:23:15 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:35:57 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ class Request
 		bool		_error;			// was there a parsing error
 		int			_errorCode;		// HTTP error code if _error is true (e.g., 400, 404)
 		std::string	_errorMessage;	// error message if _error is true (e.g., "Bad Request")
-
-
 };
 
 #endif

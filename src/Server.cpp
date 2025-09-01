@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:46:04 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/27 15:43:17 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:30:49 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ void	Server::handleRead( int fd )
 	// // In a real server, you'd parse the request and generate an appropriate response
 
 	_conns[fd].inBuffer.append(buffer, bytesRead);
+	std::cout << "[Server] Received " << bytesRead << " bytes on fd " << fd << std::endl;
+	std::cout << "[Debug] " << std::endl << _conns[fd].inBuffer << std::endl;
 	Parser parser;
 	parser.setLimits(8192, 1048576, 4096); // Example limits
 	if (parser.feed(_conns[fd].inBuffer))

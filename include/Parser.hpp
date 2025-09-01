@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 11:42:38 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/27 17:08:44 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:51:10 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ class Parser
 };
 
 // http exception class
-
 class HttpParseError : public std::runtime_error
 {
 	public:

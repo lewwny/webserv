@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 17:57:56 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/28 15:42:29 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 15:37:20 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,14 @@ class Response
 		int			_statusCode;
 		std::string	_statusMessage;
 		std::map<std::string, std::string> _headers;
-		std::vector<std::string> _cookies; // Each full cookie line
+		std::vector<std::string> _cookies; // Each full cookie line (i.e., "sessionId=abc123; Path=/; HttpOnly")
 		std::string	_body;
 		bool		_chunked;
 		bool		_connectionClose;
 		bool		_connectionKeepAlive;
 
-		static std::string	_canonicalHeaderKey( const std::string &key );
-		
+		static std::string	_canonicalHeaderKey( const std::string &key ); // to prevent duplication of headers with different cases (i.e., "Content-Type" vs "content-type")
+
 		static std::string	_itos( long v );
 };
 
