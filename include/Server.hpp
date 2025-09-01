@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:51 by lengarci          #+#    #+#             */
-/*   Updated: 2025/09/01 16:55:37 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:21:56 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,10 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
-#include "Parser.hpp"   // depends on P2
 #include "Request.hpp"  // depends on P2
-#include "ConfigParse.hpp" // depends on P1
-// #include "Response.hpp" // depends on P2
-
-class Response; // forward declaration to avoid circular dependency
+#include "Response.hpp" // depends on P2
+#include "Parser.hpp"   // depends on P2
+#include "ConfigParse.hpp" // forward declaration removed, include the header
 
 struct Connection
 {

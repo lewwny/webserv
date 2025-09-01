@@ -1,7 +1,22 @@
 #ifndef CONFIG_PARSE_HPP
 #define CONFIG_PARSE_HPP
 
-#include "Server.hpp"
+#include <iostream>
+#include <unistd.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <poll.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <cstring>
+#include <cerrno>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <stdexcept>
+#include <sstream>
+#include <fstream>
+#include <algorithm>
 
 enum TokenType {
 	T_EOF,
