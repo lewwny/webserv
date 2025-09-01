@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+    <title>Oracle des Éléments - Zodiaque Mystique</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Zodiaque Mystique</h1>
+            <div class="right">
+                <p><a href="index.html">Accueil</a></p>
+                <p><a href="signes.html">Signes</a></p>
+                <p><a href="oracle.html">Oracle des Éléments</a></p>
+                <p><a href="contact.html">Contact</a></p>
+                <button onclick="window.location.href='decouvrir.html'">Découvrir mon signe</button>
+            </div>
+        </nav>
+
+        <section class="presentation first">
+            <div class="Sous-le-voile-des-étoiles">
+                <h1>L'Oracle des Éléments</h1>
+                <p>
+                    Les quatre éléments primordiaux - Feu, Terre, Air, Eau - régissent l'univers 
+                    et influencent votre signe zodiacal. Choisissez un élément pour découvrir 
+                    les signes qui lui sont associés et leur sagesse ancestrale.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section pour les 4 éléments : Feu, Eau, Terre, Air -->
+        <section class="presentation">
+            <div class="elements-selector">
+                <div class="element-card" id="feu">
+                    <img src="fire-zodiac-signs-elements 2.jpg" alt="Feu" class="element-icon">
+                    <h3>Feu</h3>
+                    <p>Énergie, passion, créativité. Les signes de Feu sont dynamiques et audacieux.</p>
+                </div>
+                <div class="element-card" id="eau">
+                    <img src="water-zodiac-signs-elements 4.jpg" alt="Eau" class="element-icon">
+                    <h3>Eau</h3>
+                    <p>Émotion, intuition, profondeur. Les signes d'Eau sont sensibles et empathiques.</p>
+                </div>
+                <div class="element-card" id="terre">
+                    <img src="earth-zodiac-signs-elements.jpg" alt="Terre" class="element-icon">
+                    <h3>Terre</h3>
+                    <p>Stabilité, praticité, fiabilité. Les signes de Terre sont ancrés et travailleurs.</p>
+                </div>
+                <div class="element-card" id="air">
+                    <img src="air-zodiac-signs-elements 3.jpg" alt="Air" class="element-icon">
+                    <h3>Air</h3>
+                    <p>Communication, intellect, adaptabilité. Les signes d'Air sont curieux et sociables.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="presentation">
+            <div class="element-details" id="element-details">                
+                <div class="signes-by-element" id="signes-by-element">
+                    <!-- Les signes s'afficheront ici via CSS :target -->
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <style>
+        .elements-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 colonnes égales pour taille uniforme */
+            gap: 2rem;
+            margin-top: 1rem; /* Réduit pour remonter les éléments */
+        }
+
+        .element-card {
+            /* Supprimer flex: 1, max-width, min-width pour taille égale */
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem; /* Augmenté pour agrandir */
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .element-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .element-card:hover::before {
+            left: 100%;
+        }
+
+        .element-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .element-icon {
+            width: 50px; /* Augmenté */
+            height: 50px; /* Augmenté */
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem auto;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+            border: 2px solid var(--glass-border);
+        }
+
+        .element-card h3 {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem; /* Ajouté */
+        }
+
+        .element-card p {
+            color: var(--text-muted);
+            font-size: 1rem; /* Augmenté */
+        }
+
+        .element-details {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .element-header h2 {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .element-header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .signes-by-element {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .signe-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .signe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .signe-card h4 {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .signe-card .dates {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .signe-card .description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .elements-selector {
+                grid-template-columns: 1fr; /* 1 colonne sur mobile */
+            }
+            
+            .signes-by-element {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

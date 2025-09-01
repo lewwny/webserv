@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+    <title>Contact - Zodiaque Mystique</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Zodiaque Mystique</h1>
+            <div class="right">
+                <p><a href="index.html">Accueil</a></p>
+                <p><a href="signes.html">Signes</a></p>
+                <p><a href="oracle.html">Oracle des Éléments</a></p>
+                <p><a href="contact.html">Contact</a></p>
+                <button onclick="window.location.href='decouvrir.html'">Découvrir mon signe</button>
+            </div>
+        </nav>
+
+        <section class="presentation first">
+            <div class="Sous-le-voile-des-étoiles">
+                <h1>Contactez-nous</h1>
+                <p>
+                    Découvrez nos profils GitHub pour en savoir plus sur notre équipe 
+                    et nos projets mystiques.
+                </p>
+                
+                <div class="github-buttons">
+                    <a href="https://github.com/maxime-c16" target="_blank" class="github-btn">
+                        <img src="icon-github-01.png" alt="GitHub" class="github-icon">
+                        <span>macauchy</span>
+                    </a>
+                    <a href="https://github.com/lewwny" target="_blank" class="github-btn">
+                        <img src="icon-github-01.png" alt="GitHub" class="github-icon">
+                        <span>lengarci</span>
+                    </a>
+                    <a href="https://github.com/mecauchy" target="_blank" class="github-btn">
+                        <img src="icon-github-01.png" alt="GitHub" class="github-icon">
+                        <span>mcauchy-</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <style>
+        .github-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .github-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .github-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .github-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .github-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</body>
+</html>

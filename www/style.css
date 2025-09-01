@@ -131,24 +131,32 @@ header nav .right p {
 	position: relative;
 }
 
-header nav .right p::after {
-	content: '';
-	position: absolute;
-	bottom: -5px;
-	left: 0;
-	width: 0;
-	height: 2px;
-	background: linear-gradient(90deg, var(--primary), var(--secondary));
-	transition: width 0.3s ease;
+header nav .right p a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
-header nav .right p:hover {
-	color: var(--text-light);
-	transform: translateY(-2px);
+header nav .right p a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.3s ease;
 }
 
-header nav .right p:hover::after {
-	width: 100%;
+header nav .right p a:hover {
+    color: var(--text-light);
+    transform: translateY(-2px);
+}
+
+header nav .right p a:hover::after {
+    width: 100%;
 }
 
 header nav .right button {
@@ -223,19 +231,21 @@ header nav .right button:hover {
 	max-width: 600px;
 }
 
+/* Animations pour les boutons "Découvrir mon signe" */
 .presentation .Sous-le-voile-des-étoiles button {
-	padding: 16px 32px;
-	font-size: 16px;
-	font-weight: 600;
-	background: linear-gradient(135deg, var(--primary), var(--secondary));
-	border: none;
-	color: white;
-	border-radius: 50px;
-	cursor: pointer;
-	transition: all 0.3s ease;
-	position: relative;
-	overflow: hidden;
-	box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    animation: pulse-glow 3s ease-in-out infinite;
 }
 
 .presentation .Sous-le-voile-des-étoiles button::before {
@@ -254,8 +264,9 @@ header nav .right button:hover {
 }
 
 .presentation .Sous-le-voile-des-étoiles button:hover {
-	transform: translateY(-3px);
-	box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+	transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4), 0 0 30px rgba(255, 255, 255, 0.3);
+    animation: none; /* Arrête l'animation au hover */
 }
 
 /* Stars container */
@@ -317,26 +328,27 @@ header nav .right button:hover {
 
 /* Liquid glass upload button */
 .liquid-glass {
-	position: relative;
-	width: 12rem;
-	height: 12rem;
-	border-radius: 50%;
-	background: var(--glass-bg);
-	backdrop-filter: blur(20px);
-	-webkit-backdrop-filter: blur(20px);
-	border: 2px solid var(--glass-border);
-	box-shadow: 
-		0 8px 32px rgba(0, 0, 0, 0.1),
-		inset 0 1px 0 rgba(255, 255, 255, 0.2),
-		0 0 50px rgba(99, 102, 241, 0.3);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	outline: 0;
-	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-	overflow: hidden;
-	margin: 0 auto;
+    position: relative;
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid var(--glass-border);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 50px rgba(99, 102, 241, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    margin: 0 auto;
+    animation: twinkle-glass 4s ease-in-out infinite;
 }
 
 .liquid-glass::before {
@@ -355,12 +367,13 @@ header nav .right button:hover {
 }
 
 .liquid-glass:hover {
-	transform: scale(1.1);
-	box-shadow: 
-		0 20px 60px rgba(0, 0, 0, 0.2),
-		inset 0 1px 0 rgba(255, 255, 255, 0.3),
-		0 0 80px rgba(99, 102, 241, 0.5);
-	border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 100px rgba(99, 102, 241, 0.8);
+    border-color: rgba(255, 255, 255, 0.4);
+    animation: none; /* Arrête l'animation au hover */
 }
 
 .liquid-glass .plus-icon {
@@ -370,11 +383,13 @@ header nav .right button:hover {
 	z-index: 1;
 	transition: all 0.4s ease;
 	text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+	animation: twinkle-icon 2.5s ease-in-out infinite;
 }
 
 .liquid-glass:hover .plus-icon {
 	transform: rotate(180deg);
-	text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+	text-shadow: 0 0 40px rgba(255, 255, 255, 1);
+	animation: none; /* Arrête l'animation au hover */
 }
 
 @keyframes liquidFlow {
@@ -392,6 +407,56 @@ header nav .right button:hover {
 			rgba(99, 102, 241, 0.2) 100%);
 		transform: rotate(180deg);
 	}
+}
+
+/* Keyframes pour les animations */
+@keyframes pulse-glow {
+    0%, 100% { 
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 10px 40px rgba(99, 102, 241, 0.6), 0 0 25px rgba(255, 255, 255, 0.4);
+        transform: scale(1.02);
+    }
+}
+
+@keyframes twinkle-glass {
+    0%, 100% { 
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            0 0 50px rgba(99, 102, 241, 0.3);
+    }
+    50% { 
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4),
+            0 0 80px rgba(99, 102, 241, 0.6),
+            0 0 20px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Animation du signe + */
+.liquid-glass .plus-icon {
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--text-light);
+    z-index: 1;
+    transition: all 0.4s ease;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    animation: twinkle-icon 2.5s ease-in-out infinite;
+}
+
+@keyframes twinkle-icon {
+    0%, 100% { 
+        opacity: 0.8;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+    50% { 
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 10px rgba(174, 144, 255, 0.6);
+    }
 }
 
 /* Responsive design */
