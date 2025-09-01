@@ -1,0 +1,6 @@
+Genere l horoscope du jour actuel pour le signe {{signe}}.
+Utilise la date d aujourd hui.
+Le texte doit etre redige en plusieurs phrases et chaque retour a la ligne doit etre remplace par le caractere <br> au lieu d un vrai saut de ligne.
+Ne mets aucune mise en forme ni caracteres speciaux.
+Parle de l amour, du travail et de la sante avec un ton bienveillant et inspire.
+Le texte doit contenir environ 5 a 7 phrases.
