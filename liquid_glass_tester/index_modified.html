@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" href="style_modified.css">
+	<title>Acceuil</title>
+</head>
+	<body>
+		<header>
+			<nav>
+				<h1>Zodiaque mystique</h1>
+				<div class="right">
+					<p>Accueil</p>
+					<p>Signes</p>
+					<p>Horoscope</p>
+					<p>Contact</p>
+					<button>Découvrir mon signe</button>
+				</div>
+			</nav>
+
+			<section class="presentation first">
+				<div class="Sous-le-voile-des-étoiles">
+					<h1>Sous le voile des étoiles</h1>
+					<p>
+						Un ciel sombre, des lumières lointaines.
+						Les étoiles ne brillent pas par hasard.
+						Et si leur secret était pour vous ?
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porttitor nulla urna, sed consequat lectus placerat eu. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum accumsan v
+					</p>
+					<button>Découvrir mon signe</button>
+						<div class="stars-container">
+							<img src="star.png"/>
+							<img src="star.png"/>
+							<div class="glass" id="btn"></div>
+						</div>
+					</div>
+					<div class="aside">
+						<svg width="0" height="0" style="position:absolute;">
+							<defs>
+								<filter id="liquid-magnify" x="-50%" y="-50%" width="200%" height="200%">
+									<!-- Effet de loupe principal -->
+									<feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+									
+									<!-- Créer une texture de distorsion -->
+									<feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="3" seed="1" result="noise"/>
+									<feColorMatrix in="noise" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 3 -1" result="noiseTransparent"/>
+									<feDisplacementMap in="blur" in2="noiseTransparent" scale="20" xChannelSelector="R" yChannelSelector="G" result="displacedImage">
+										<animate attributeName="scale" values="15;25;15" dur="4s" repeatCount="indefinite"/>
+									</feDisplacementMap>
+									
+									<!-- Effet de loupe -->
+									<feComponentTransfer in="displacedImage" result="magnified">
+										<feFuncR type="linear" slope="1.5" intercept="-0.2"/>
+										<feFuncG type="linear" slope="1.5" intercept="-0.2"/>
+										<feFuncB type="linear" slope="1.5" intercept="-0.2"/>
+									</feComponentTransfer>
+									
+									<!-- Aberration chromatique -->
+									<feOffset in="magnified" dx="3" dy="0" result="redOffset"/>
+									<feOffset in="magnified" dx="-3" dy="0" result="blueOffset"/>
+									<feOffset in="magnified" dx="0" dy="0" result="greenOffset"/>
+									
+									<feColorMatrix in="redOffset" type="matrix" 
+										values="1 0 0 0 0 
+												0 0 0 0 0 
+												0 0 0 0 0 
+												0 0 0 1 0" result="red"/>
+									<feColorMatrix in="greenOffset" type="matrix"
+										values="0 0 0 0 0 
+												0 1 0 0 0 
+												0 0 0 0 0 
+												0 0 0 1 0" result="green"/>
+									<feColorMatrix in="blueOffset" type="matrix"
+										values="0 0 0 0 0 
+												0 0 0 0 0 
+												0 0 1 0 0 
+												0 0 0 1 0" result="blue"/>
+									
+									<!-- Combiner les canaux colorés -->
+									<feComposite in="red" in2="green" operator="arithmetic" k2="1" k3="1" result="temp"/>
+									<feComposite in="temp" in2="blue" operator="arithmetic" k2="1" k3="1" result="coloredMagnify"/>
+									
+									<!-- Améliorer le contraste -->
+									<feComponentTransfer in="coloredMagnify">
+										<feFuncR type="linear" slope="1.2" intercept="-0.1"/>
+										<feFuncG type="linear" slope="1.2" intercept="-0.1"/>
+										<feFuncB type="linear" slope="1.2" intercept="-0.1"/>
+									</feComponentTransfer>
+								</filter>
+							</defs>
+						</svg>
+						<img src="star.png"/>
+					</div>
+			</section>
+		</header>
+	</body>
+</html>
