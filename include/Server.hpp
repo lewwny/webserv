@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lenygarcia <lenygarcia@student.42.fr>      +#+  +:+       +#+        */
+/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:51 by lengarci          #+#    #+#             */
-/*   Updated: 2025/08/28 22:07:14 by lenygarcia       ###   ########.fr       */
+/*   Updated: 2025/09/01 16:01:47 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
-// #include "Parser.hpp"   // depends on P2
+#include "Parser.hpp"   // depends on P2
+#include "Request.hpp"  // depends on P2
 // #include "Response.hpp" // depends on P2
 
 struct Connection

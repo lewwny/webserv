@@ -1,4 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/25 11:46:04 by lengarci          #+#    #+#             */
+/*   Updated: 2025/09/01 16:02:26 by macauchy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/Server.hpp"
+#include <sstream>
+
+template<typename T>
+static std::string toString(T n)
+{
+    std::ostringstream oss;
+    oss << n;
+    return oss.str();
+}
+
 
 Server::Server( void ) : _listenFd(-1)
 {
@@ -109,9 +131,39 @@ void	Server::handleRead( int fd )
 		closeConnection(fd);
 		return;
 	}
-	// For demonstration, we simply create a placeholder response
-	_conns[fd].outBuffer = "HTTP/1.1 200 OK\r\nContent-Length: 14\r\n\r\nHello, World!\n";
-	// In a real server, you'd parse the request and generate an appropriate response
+	// // For demonstration, we simply create a placeholder response
+	// _conns[fd].outBuffer = "HTTP/1.1 200 OK\r\nContent-Length: 14\r\n\r\nHello, World!\n";
+	// // In a real server, you'd parse the request and generate an appropriate response
+
+	_conns[fd].inBuffer.append(buffer, bytesRead);
+	std::cout << "[Server] Received " << bytesRead << " bytes on fd " << fd << std::endl;
+	std::cout << "[Debug] " << std::endl << _conns[fd].inBuffer << std::endl;
+	Parser parser;
+	parser.setLimits(8192, 1048576, 4096); // Example limits
+	if (parser.feed(_conns[fd].inBuffer))
+	{
+		Request req = parser.getRequest();
+		if (req.getError())
+		{
+			_conns[fd].outBuffer = "HTTP/1.1 " + toString(req.getErrorCode()) + " " + req.getErrorMessage() + "\r\nContent-Length: 0\r\n\r\n";
+		}
+		else
+		{
+			// Simple echo response for demonstration
+			std::string body = "You requested: " + req.getPath() + "\n";
+			_conns[fd].outBuffer = "HTTP/1.1 200 OK\r\nContent-Length: " + toString(body.length()) + "\r\n\r\n" + body;
+		}
+		_conns[fd].inBuffer.clear(); // Clear input buffer after processing
+	}
+	else if (parser.isComplete() && !parser.getRequest().getError())
+	{
+		// Request is complete but no error, should not happen here
+	}
+	else
+	{
+		// Incomplete request, wait for more data
+		return;
+	}
 
 	// Modify state to monitor for write readiness
 	for (long unsigned int i = 0; i < _pfds.size(); i++)
