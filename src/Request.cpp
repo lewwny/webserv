@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:16:16 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/27 17:41:03 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:43:56 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,11 @@ const std::string	&Request::getVersion( void ) const
 const std::string	&Request::getBody( void ) const
 {
 	return (_body);
+}
+
+const std::map<std::string, std::string> &Request::getHeaders( void ) const
+{
+	return (_headers);
 }
 
 void	Request::reset( void )

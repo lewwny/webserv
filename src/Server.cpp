@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:46:04 by lengarci          #+#    #+#             */
-/*   Updated: 2025/09/01 17:05:42 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:45:49 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,10 +137,9 @@ void	Server::handleRead( int fd )
 
 	_conns[fd].inBuffer.append(buffer, bytesRead);
 	std::cout << "[Server] Received " << bytesRead << " bytes on fd " << fd << std::endl;
-	std::cout << "[Debug] " << std::endl << _conns[fd].inBuffer << std::endl;
+	// std::cout << "[Debug] " << std::endl << _conns[fd].inBuffer << std::endl;
 	Parser parser;
-	parser.setLimits(8192, 1048576, 4096); // Example limits
-	// find limits in config 
+	parser.setLimits(8192, 1048576, 4096); // Example limits, should get them from server._config
 	if (parser.feed(_conns[fd].inBuffer))
 	{
 		Request req = parser.getRequest();
@@ -151,9 +150,11 @@ void	Server::handleRead( int fd )
 		}
 		else
 		{
+			std::cerr << "[Server] Request parsed successfully, fd: " << fd << std::endl;
 			// Simple echo response for demonstration (TODO: real routing/handling)
 			std::string body = "You requested: " + req.getPath() + "\n";
 			_conns[fd].outBuffer = "HTTP/1.1 200 OK\r\nContent-Length: " + toString(body.length()) + "\r\n\r\n" + body;
+			std::cout << "[DEBUG] outBuffer: " << std::endl << _conns[fd].outBuffer << std::endl;
 		}
 		_conns[fd].inBuffer.clear(); // Clear input buffer after processing
 	}

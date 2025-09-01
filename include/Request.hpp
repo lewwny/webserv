@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 11:43:17 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/28 16:35:57 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:44:01 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ class Request
 		const std::string	&getQuery( void ) const;
 		const std::string	&getVersion( void ) const;
 		const std::string	&getBody( void ) const;
+		const std::map<std::string, std::string> &getHeaders( void ) const;
 
 	private:
 		std::string	_method;	// GET, POST, DELETE, etc.
