@@ -4,7 +4,7 @@ import sys
 import random
 
 def openfile() -> str:
-	with open("../../www/test.html", "r") as file:
+	with open("../../www/decouvrir.html", "r") as file:
 		return file.read()
 
 def openprompt() -> str:
@@ -33,8 +33,8 @@ def main():
 	contents=openprompt().replace("{{signe}}", signe),
 	)
 	file_content = file_content.replace(
-		"Ceci est un contenu initial.",
-		response.text
+		"<!-- texte ici-->",
+		"<p>" + response.text + "</p>"
 	)
 	sys.stdout.write("Content-Type: text/html\r\n\r\n")
 	sys.stdout.write(file_content)
