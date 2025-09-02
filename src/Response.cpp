@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 17:57:36 by macauchy          #+#    #+#             */
-/*   Updated: 2025/09/01 15:37:54 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/02 11:57:14 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,16 @@ Response::~Response( void )
 void	Response::setStatus( int code, const std::string &message )
 {
 	_statusCode = code;
+	_statusMessage = message;
+}
+
+void	Response::setStatusCode( int code )
+{
+	_statusCode = code;
+}
+
+void	Response::setStatusMessage( const std::string &message )
+{
 	_statusMessage = message;
 }
 

@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 17:57:56 by macauchy          #+#    #+#             */
-/*   Updated: 2025/09/01 15:37:20 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/02 11:58:26 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ class Response
 		~Response( void );
 
 		void	setStatus( int code, const std::string &message );
+		void	setStatusCode( int code );
+		void	setStatusMessage( const std::string &message );
 
 		void	setHeader( const std::string &key, const std::string &value );
 		void	addHeader( const std::string &key, const std::string &value );
@@ -67,15 +69,6 @@ class Response
 		bool		isConnectionClose( void ) const;
 		bool		isConnectionKeepAlive( void ) const;
 		std::map<std::string, std::string>	getHeaders( void ) const;
-		
-		// Setters
-		// void		setHeaders( const std::map<std::string, std::string> &headers );
-		// void		setStatusCode( int code );
-		// void		setStatusMessage( const std::string &message );
-		// void		setBody( const std::string &body );
-		// void		setChunked( bool chunked );
-		// void		setConnectionClose( bool close );
-		// void		setConnectionKeepAlive( bool keepAlive );
 
 	private:
 		int			_statusCode;
