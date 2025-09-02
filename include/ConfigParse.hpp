@@ -47,6 +47,7 @@ public:
 	const std::vector<std::map<std::string, std::string> > &getLocationConfig(size_t index) const;
 	void printTokens();
 	void printConfig() const;
+	const std::string& getErrorPagePath(const int code, size_t serverIndex) const;
 private:
 	void						loadFile();
 	void						tokenize();
