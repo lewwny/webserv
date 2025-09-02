@@ -9,10 +9,7 @@
 #include <map>
 #include "Parser.hpp"   // Request
 #include "Response.hpp" // Response
-#include "Config.hpp"   // Route, ServerBlock, Config
-#include "Cgi.hpp"      // only for type hints / IDs, not called synchronously
-#include "Upload.hpp"   // idem
-
+#include "ConfigParse.hpp"   // Config, Route, ServerBlock
 // The Router *does not* execute CGI or write uploads itself. It *decides* the action.
 // The event-loop (Server) will execute non-blocking actions (CGI pipes, disk streaming).
 

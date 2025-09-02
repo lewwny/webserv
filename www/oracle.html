@@ -65,23 +65,80 @@
     </header>
 
     <style>
+        /* Global adjustments to reduce white space and make elements appear higher */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            padding: 0.5rem 1.5rem; /* even more compact to pull content up */
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.2rem; /* minimal space below nav */
+        }
+
+        nav h1 {
+            margin: 0;
+            font-size: calc(1.1rem + 0.6vw);
+        }
+
+        nav .right {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* Bigger, responsive nav button */
+        nav .right button {
+            padding: 0.6rem 1.2rem;
+            font-size: calc(0.9rem + 0.6vw);
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            background: var(--accent, #6366f1);
+            color: #fff;
+        }
+
+        /* Presentation sections compacted so elements appear higher */
+        .presentation {
+            margin: 0;
+            padding: 0.3rem 0; /* tighter vertical spacing */
+        }
+
+        .presentation.first .Sous-le-voile-des-étoiles {
+            margin-bottom: 0; /* remove extra bottom margin to bring elements up */
+            padding-bottom: 0.2rem;
+        }
+
+        /* Elements grid: smaller gaps and larger cards that scale with viewport */
         .elements-selector {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 colonnes égales pour taille uniforme */
-            gap: 2rem;
-            margin-top: 1rem; /* Réduit pour remonter les éléments */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem; /* reduced gap to avoid empty space */
+            margin-top: -2.4rem; /* negative margin to lift the tiles higher on the page */
+            z-index: 1;
         }
 
         .element-card {
-            /* Supprimer flex: 1, max-width, min-width pour taille égale */
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 2px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2.5rem; /* Augmenté pour agrandir */
+            border-radius: 16px;
+            padding: calc(1.2rem + 1.2vw); /* scale with viewport */
+            min-height: calc(8vh + 120px); /* ensure visible large buttons */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
             position: relative;
             overflow: hidden;
         }
@@ -93,25 +150,24 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
             transition: left 0.6s ease;
         }
 
-        .element-card:hover::before {
-            left: 100%;
-        }
+        .element-card:hover::before { left: 100%; }
 
         .element-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 30px rgba(99, 102, 241, 0.4);
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 18px 36px rgba(0,0,0,0.18), 0 0 24px rgba(99,102,241,0.18);
         }
 
+        /* Bigger, responsive icons */
         .element-icon {
-            width: 50px; /* Augmenté */
-            height: 50px; /* Augmenté */
+            width: min(12vw, 120px);
+            height: min(12vw, 120px);
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto 1rem auto;
+            margin: 0 0 1rem 0;
             display: block;
             animation: float 3s ease-in-out infinite;
             border: 2px solid var(--glass-border);
@@ -119,84 +175,48 @@
 
         .element-card h3 {
             color: var(--text-light);
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem; /* Ajouté */
+            margin: 0.4rem 0 0.6rem 0;
+            font-size: calc(1rem + 0.9vw);
         }
 
         .element-card p {
             color: var(--text-muted);
-            font-size: 1rem; /* Augmenté */
+            font-size: calc(0.9rem + 0.4vw);
+            margin: 0;
         }
 
-        .element-details {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .element-header h2 {
-            color: var(--text-light);
-            margin-bottom: 1rem;
-        }
-
-        .element-header p {
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        .element-details { text-align: center; padding: 1.2rem 0; }
 
         .signes-by-element {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1.6rem;
         }
 
         .signe-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 1.5rem;
+            border-radius: 12px;
+            padding: 1rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: transform 0.25s ease;
         }
 
-        .signe-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .signe-card:hover { transform: translateY(-4px); }
+
+        @keyframes float { 0%,100%{ transform: translateY(0px);} 50%{ transform: translateY(-8px);} }
+
+        /* Responsive adjustments */
+        @media (max-width: 1100px) {
+            .elements-selector { grid-template-columns: repeat(2, 1fr); margin-top: -1.2rem; }
         }
 
-        .signe-card h4 {
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
-        }
-
-        .signe-card .dates {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .signe-card .description {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .elements-selector {
-                grid-template-columns: 1fr; /* 1 colonne sur mobile */
-            }
-            
-            .signes-by-element {
-                grid-template-columns: 1fr;
-            }
+            .elements-selector { grid-template-columns: 1fr; margin-top: 0.2rem; }
+            nav { padding: 0.6rem 1rem; }
+            nav .right button { padding: 0.7rem 1rem; }
         }
     </style>
 </body>
