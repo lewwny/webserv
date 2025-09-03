@@ -15,8 +15,14 @@ Config::Config(const ConfigParse& configParse, size_t index) {
 	while (ss >> serverName) {
 		_serverNames.push_back(serverName);
 	}
-	_index = serverConfig["index"];
-	_root = serverConfig["root"];
+	if (serverConfig.find("index") == serverConfig.end())
+		_index = "index.html"; // default index
+	else
+		_index = serverConfig["index"];
+	if (serverConfig.find("root") == serverConfig.end())
+		_root = "/www"; // default root
+	else
+		_root = serverConfig["root"];
 	_clientMaxBodySize = 1024 * 1024; // default 1MB
 	if (serverConfig.find("client_max_body_size") != serverConfig.end()) {
 		std::string sizeStr = serverConfig["client_max_body_size"];
@@ -89,7 +95,7 @@ Location::Location(const std::map<std::string, std::string>& locConf) {
 		throw std::runtime_error("Missing 'path' directive in location block");
 	_path = it->second;
 
-	it = locConf.find("methods");
+	it = locConf.find("allow_methods");
 	if (it == locConf.end())
 		_methods.push_back("GET"); // default method
 	else {
@@ -102,13 +108,13 @@ Location::Location(const std::map<std::string, std::string>& locConf) {
 
 	it = locConf.find("root");
 	if (it == locConf.end())
-		_root = "/www"; // default root
+		_root = "/"; // default root
 	else
 		_root = it->second;
 
 	it = locConf.find("index");
 	if (it == locConf.end())
-		_index = "index.html"; // default index
+		_index = ""; // default index
 	else
 		_index = it->second;
 

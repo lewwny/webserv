@@ -6,7 +6,7 @@
 /*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:45:22 by lengarci          #+#    #+#             */
-/*   Updated: 2025/09/03 12:10:00 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/09/03 15:51:47 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,11 @@ int main(int argc, char **argv) {
 		// 	std::cout << "=== Server " << i + 1 << " Configuration ===" << std::endl;
 		// 	Config config(parser, i);
 		// 	config.printConfig();
-		// 	// for (size_t j = 0; j < config.getLocations().size(); ++j) {
-		// 	// 	std::cout << "--- Location " << j + 1 << " ---" << std::endl;
-		// 	// 	config.getLocations()[j].printLocation();
-		// 	// }
 		// 	std::cout << "==============================" << std::endl;
 		// }
-		// serverManager.runServers();
+		ServerManager::setInstance(&serverManager);
+		signal(SIGINT, &ServerManager::handleSignal);
+		serverManager.run();
 	}
 	catch (const std::exception &e) {
 		std::cerr << "Error: " << e.what() << std::endl;

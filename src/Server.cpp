@@ -6,7 +6,7 @@
 /*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:46:04 by lengarci          #+#    #+#             */
-/*   Updated: 2025/09/03 11:49:13 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/09/03 14:38:16 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ Server::~Server( void )
 void Server::init( void )
 {
 	struct sockaddr_in	addr;
-	struct pollfd		pfd;
+	// struct pollfd		pfd;
 	int					option = 1;
 
 	std::string host = _config.getHost();
@@ -50,19 +50,27 @@ void Server::init( void )
 	addr.sin_addr.s_addr = inet_addr(host.c_str());
 	addr.sin_port = htons(port);
 	if (bind(_listenFd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-		throw std::runtime_error("Bind failed: " + std::string(strerror(errno)));
+	{
+		close(_listenFd);
+		_listenFd = -1;
+		std::cerr << "Bind failed on " << host << ":" << port << " - " << strerror(errno) << std::endl;
+		return ;
+	}
+		// throw std::runtime_error("Bind failed: " + std::string(strerror(errno)));
 	if (listen(_listenFd, SOMAXCONN) < 0)
 		throw std::runtime_error("Listen failed: " + std::string(strerror(errno)));
 
 	// fcntl to make socket non-blocking
 	if (fcntl(_listenFd, F_SETFL, O_NONBLOCK) < 0)
 		throw std::runtime_error("Fcntl failed: " + std::string(strerror(errno)));
+	// pfd.fd = _listenFd;
+	// pfd.events = POLLIN;
+	// _pfds.push_back(pfd);
 	
-	pfd.fd = _listenFd;
-	pfd.events = POLLIN;
-	_pfds.push_back(pfd);
-
 	std::cout << "[Server] Listening on " << port << std::endl;
+	_host = host;
+	_port = port;
+	std::cout << "[DEBUG] Host: " << _host << ", Port: " << _port << ", listen fd: " << _listenFd << std::endl;
 }
 
 // void	Server::run( void )

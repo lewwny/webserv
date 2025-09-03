@@ -18,6 +18,7 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include <signal.h>
 #include "Request.hpp"  // depends on P2
 #include "Response.hpp" // depends on P2
 #include "Parser.hpp"   // depends on P2
@@ -43,12 +44,20 @@ public:
 
 	void init( void ); // create listening socket
 	// void run( void );                                   // main poll() loop
-
+	int getListenFd() const { return _listenFd; }
+	const Config& getConfig() const { return _config; }
+	const std::string& getHost() const { return _host; }
+	int getPort() const { return _port; }
 private:
 	// ConfigParse _config; // server configuration
 	int _listenFd;
 	Config _config;
-	std::vector<struct pollfd> _pfds;
+	// std::vector<struct pollfd> _pfds;
+	int _port;
+	std::string _host;
+	Server(); // prevent default constructor
+	Server(const Server &); // prevent copy constructor
+	Server &operator=(const Server &); // prevent assignment operator
 	// std::map<int, Connection> _conns;
 
 	// void acceptConnection( void );
