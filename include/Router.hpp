@@ -29,7 +29,7 @@ public:
         int        status;            // for errors (and allowed to prefill 3xx/4xx/5xx)
         std::string reason;           // short message (e.g., "Not Found")
         std::string redirectURL;      // for ACTION_REDIRECT
-        std::string fsPath;           // resolved filesystem path for static/CGI/upload
+        std::string fsPath;           // resolved filesystem path for static/CGI/upload (e.g., "/var/www/index.html")
         std::string mountUri;         // the matched location prefix (e.g., "/cgi-bin")
         std::string relPath;          // URI relative to location root
         std::string root;             // route root
