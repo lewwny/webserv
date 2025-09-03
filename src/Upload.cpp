@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Upload.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/03 14:28:04 by mcauchy-          #+#    #+#             */
+/*   Updated: 2025/09/03 14:28:05 by mcauchy-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Upload.hpp"
 
 // but de cette fonction : sauvegarder le corps de la requête (POST) dans un fichier dans le répertoire spécifié par d.uploadStore
