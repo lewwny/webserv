@@ -184,7 +184,6 @@ void	ServerManager::handleRead( int fd )
 
 	_conns[fd].inBuffer.append(buffer, bytesRead);
 	std::cout << "[Server] Received " << bytesRead << " bytes on fd " << fd << std::endl;
-	// std::cout << "[Debug] " << std::endl << _conns[fd].inBuffer << std::endl;
 	Parser parser;
 	parser.setLimits(8192, 1048576, 4096); // Example limits, should get them from server._config
 	if (parser.feed(_conns[fd].inBuffer))

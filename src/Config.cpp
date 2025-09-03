@@ -1,10 +1,5 @@
 #include "../include/Config.hpp"
 
-// Config::Config(const ConfigParse& configParse, size_t index) {
-// 	_serverConfig = configParse.getServerConfig(index);
-// 	_locationConfig = configParse.getLocationConfig(index);
-// }
-
 Config::Config(const ConfigParse& configParse, size_t index) {
 	std::map<std::string, std::string> serverConfig = configParse.getServerConfig(index);
 	_host = serverConfig["host"];
@@ -173,74 +168,3 @@ void Location::printLocation() const {
 	std::cout << "  Client Max Body Size: " << _clientMaxBodySize << std::endl;
 	std::cout << "  Upload Store: " << (_uploadStore.empty() ? "none" : _uploadStore) << std::endl;
 }
-
-
-
-// const std::map<std::string, std::string>& Config::getServerConfig() const {
-// 	return _serverConfig;
-// }
-
-// const std::vector<std::map<std::string, std::string> >& Config::getLocationConfig() const {
-// 	return _locationConfig;
-// }
-
-// void Config::printConfig() const {
-// 	std::cout << "Server Configuration:" << std::endl;
-// 	for (std::map<std::string, std::string>::const_iterator it = _serverConfig.begin(); it != _serverConfig.end(); ++it) {
-// 		std::cout << it->first << ": " << it->second << std::endl;
-// 	}
-// 	std::cout << "Location Configurations:" << std::endl;
-// 	for (size_t i = 0; i < _locationConfig.size(); ++i) {
-// 		std::cout << "Location " << i + 1 << ":" << std::endl;
-// 		for (std::map<std::string, std::string>::const_iterator it = _locationConfig[i].begin(); it != _locationConfig[i].end(); ++it) {
-// 			std::cout << "  " << it->first << ": " << it->second << std::endl;
-// 		}
-// 	}
-// }
-
-// const std::string& Config::getValue(const std::string& key) const {
-// 	std::map<std::string, std::string>::const_iterator it = _serverConfig.find(key);
-// 	if (it != _serverConfig.end()) {
-// 		return it->second;
-// 	}
-// 	return std::string();
-// }
-
-// const std::map<std::string, std::string>& Config::getLocation(const std::string& path) const {
-// 	for (size_t i = 0; i < _locationConfig.size(); ++i) {
-// 		std::map<std::string, std::string>::const_iterator it = _locationConfig[i].find("path");
-// 		if (it != _locationConfig[i].end() && it->second == path) {
-// 			return _locationConfig[i];
-// 		}
-// 	}
-// 	static std::map<std::string, std::string> empty;
-// 	return empty;
-// }
-
-// size_t Config::getLocationCount() const {
-// 	return _locationConfig.size();
-// }
-
-// const std::string& Config::getErrorPage(int code) const {
-// 	std::map<std::string, std::string>::const_iterator it = _serverConfig.find("error_page " + std::to_string(code));
-// 	if (it != _serverConfig.end()) {
-// 		return it->second;
-// 	}
-// 	static std::string empty;
-// 	return empty;
-// }
-
-// const std::string& Config::getLocationValue(const std::string& path, const std::string& key) const {
-// 	for (size_t i = 0; i < _locationConfig.size(); ++i) {
-// 		std::map<std::string, std::string>::const_iterator it = _locationConfig[i].find("path");
-// 		if (it != _locationConfig[i].end() && it->second == path) {
-// 			std::map<std::string, std::string>::const_iterator keyIt = _locationConfig[i].find(key);
-// 			if (keyIt != _locationConfig[i].end()) {
-// 				return keyIt->second;
-// 			}
-// 			break;
-// 		}
-// 	}
-// 	static std::string empty;
-// 	return empty;
-// }
