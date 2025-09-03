@@ -6,7 +6,7 @@
 /*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:18 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/03 14:28:19 by mcauchy-         ###   ########.fr       */
+/*   Updated: 2025/09/03 14:58:31 by mcauchy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 #include "Router.hpp"
 #include "Response.hpp"
+#include <sys/stat.h>
+#include <chrono>
 
 class Upload
 {
@@ -23,5 +25,10 @@ class Upload
 		// Produce an upload response (blocking I/O):
 		static Response save(const Router::Decision& d, const Request& req);
 };
+	
+	static bool			isDir( const std::string& path );
+	static bool			invalidFilename( const std::string& name );
+	static std::string	joinPath( const std::string& dir, const std::string& file );
+	static std::string	generateUniqueFilename( const std::string& dir, const std::string& baseName );
 
 #endif
