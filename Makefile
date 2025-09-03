@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
+#    By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 11:17:35 by lengarci          #+#    #+#              #
-#    Updated: 2025/09/01 16:06:18 by macauchy         ###   ########.fr        #
+#    Updated: 2025/09/03 11:48:56 by lengarci         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,17 @@ SRCS		=	main.cpp \
 				src/Request.cpp \
 				src/Parser.cpp	\
 				src/Response.cpp \
-				src/ConfigParse.cpp
+				src/ConfigParse.cpp \
+				src/ServerManager.cpp \
+				src/Config.cpp
 OBJS		=	$(addprefix $(DIR_OBJ), $(SRCS:.cpp=.o))
 HEADER		=	include/Server.hpp \
 				include/Request.hpp \
 				include/Parser.hpp \
 				include/Response.hpp \
-				include/ConfigParse.hpp
+				include/ConfigParse.hpp \
+				include/ServerManager.hpp \
+				include/Config.hpp
 
 all:		$(NAME)
 

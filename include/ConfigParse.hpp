@@ -48,6 +48,7 @@ public:
 	void printTokens();
 	void printConfig() const;
 private:
+	// std::vector<ConfigBlock> -> possede un tableau de chaque config block
 	void						loadFile();
 	void						tokenize();
 	void						parseServerBlock(size_t &i, size_t &serverCount);

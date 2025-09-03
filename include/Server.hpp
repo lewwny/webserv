@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/25 11:45:51 by lengarci          #+#    #+#             */
-/*   Updated: 2025/09/01 17:21:56 by macauchy         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
@@ -33,38 +22,39 @@
 #include "Response.hpp" // depends on P2
 #include "Parser.hpp"   // depends on P2
 #include "ConfigParse.hpp" // forward declaration removed, include the header
+#include "Config.hpp"
 
-struct Connection
-{
-	int fd;                     // socket fd
-	// Parser parser;              // owned parser (P2)
-	std::string inBuffer;       // raw data read
-	std::string outBuffer;      // response to send
-	bool closed;
+// struct Connection
+// {
+// 	int fd;                     // socket fd
+// 	// Parser parser;              // owned parser (P2)
+// 	std::string inBuffer;       // raw data read
+// 	std::string outBuffer;      // response to send
+// 	bool closed;
 
-	Connection() : fd(-1), closed(false) {}
-};
+// 	Connection() : fd(-1), closed(false) {}
+// };
 
 class Server
 {
 public:
-	Server( void );
+	Server(const Config &config );
 	~Server( void );
 
-	void setConfig(const ConfigParse& config);
-	void init( const std::string& host, int port ); // create listening socket
-	void run( void );                                   // main poll() loop
+	void init( void ); // create listening socket
+	// void run( void );                                   // main poll() loop
 
 private:
-	ConfigParse _config; // server configuration
+	// ConfigParse _config; // server configuration
 	int _listenFd;
+	Config _config;
 	std::vector<struct pollfd> _pfds;
-	std::map<int, Connection> _conns;
+	// std::map<int, Connection> _conns;
 
-	void acceptConnection( void );
-	void handleRead( int fd );
-	void handleWrite( int fd );
-	void closeConnection(int fd);
+	// void acceptConnection( void );
+	// void handleRead( int fd );
+	// void handleWrite( int fd );
+	// void closeConnection(int fd);
 };
 
 #endif
