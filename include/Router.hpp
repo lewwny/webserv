@@ -9,83 +9,69 @@
 #include <map>
 #include "Parser.hpp"   // Request
 #include "Response.hpp" // Response
-#include "Config.hpp"   // Route, ServerBlock, Config
-#include "Cgi.hpp"      // only for type hints / IDs, not called synchronously
-#include "Upload.hpp"   // idem
+#include "ConfigParse.hpp" // Route, ServerBlock
 
-// The Router *does not* execute CGI or write uploads itself. It *decides* the action.
-// The event-loop (Server) will execute non-blocking actions (CGI pipes, disk streaming).
+class Router
+{
+	public:
+		// No CTOR/DTOR needed, as Router is a static utility class.
 
-class Router {
-public:
-    // What action should be performed for this request?
-    enum ActionType {
-        ACTION_STATIC,
-        ACTION_REDIRECT,
-        ACTION_CGI,
-        ACTION_UPLOAD,
-        ACTION_ERROR
-    };
+		enum ActionType
+		{
+			ACTION_STATIC,		// Serve static files
+			ACTION_REDIRECT,	// HTTP redirect
+			ACTION_CGI,			// Execute CGI scripts
+			ACTION_UPLOAD,		// Handle file uploads
+			ACTION_ERROR,		// Return error response
+			ACTION_AUTOINDEX	// Generate directory listing
+		};
 
-    struct Decision {
-        ActionType type;
-        int        status;            // for errors (and allowed to prefill 3xx/4xx/5xx)
-        std::string reason;           // short message (e.g., "Not Found")
-        std::string redirectURL;      // for ACTION_REDIRECT
-        std::string fsPath;           // resolved filesystem path for static/CGI/upload
-        std::string mountUri;         // the matched location prefix (e.g., "/cgi-bin")
-        std::string relPath;          // URI relative to location root
-        std::string root;             // route root
-        std::string index;            // route index (if any)
-        bool        autoindex;        // route autoindex
-        bool        keepAlive;        // whether to keep connection open
-        // CGI
-        std::string cgiInterpreter;   // e.g. "/usr/bin/php-cgi"
-        std::string cgiExt;           // e.g. ".php"
-        // Upload
-        bool        uploadEnabled;
-        std::string uploadStore;      // target dir for uploads
-        // Which server block was selected (optional, for further use)
-        const ServerBlock* server;
-        const Route*       route;
-        Decision() : type(ACTION_ERROR), status(500), autoindex(false),
-                     keepAlive(true), uploadEnabled(false),
-                     server(0), route(0) {}
-    };
+		// Structure `Decision` encapsulates the routing decision details.
+		struct Decision
+		{
+			ActionType	type;			// Type of action to perform
+			int			status;			// HTTP status code (for redirects/errors)
+			std::string	reason;			// Reason phrase (for error responses)
+			std::string	redirectURL;	// URL to redirect to (for redirects)
+			std::string	fsPath;			// Absolute filesystem path (for static files/CGI/uploads)
+			std::string	mountUri;		// URI prefix for static files (i.g. "/static", "/cgi-bin")
+			std::string	relPath;		// Relative path within the mount point (root)
+			std::string	root;			// Effective root directory
+			bool		autoindex;		// If dir and autoindex enabled
+			bool		keepAlive;		// Connection keep-alive
 
-    // Decide the action to perform. (No blocking I/O here.)
-    static Decision decide(const Request& req, const Config& cfg);
+			// CGI-specific
+			std::string	cgiExt;			// CGI file extension (e.g. ".php", ".py")
+			std::string	cgiInterpreter;	// CGI interpreter path (i.g. "/usr/bin/php", "/usr/bin/python")
+	
+			// Upload-specific
+			bool		uploadEnabled;	// Is upload enabled for this route
+			std::string	uploadStore;	// Directory to store uploaded files
 
-    // Immediate producers (in-Router), no blocking on pipes:
-    static Response makeRedirect(const Decision& d);
-    static Response makeError(const Decision& d,
-                              const ServerBlock* sb,
-                              int code, const std::string& msg);
+			// Config reference (for logging/debugging)
+			const std::map<std::string, std::string>	*server;
+			const std::map<std::string, std::string>	*route;
 
-    // Static file/dir: build a complete Response (reads file; small blocking read).
-    // In your final version, you should stream via the event loop; for the first milestone this is fine.
-    static Response serveStatic(const Decision& d);
+			Decision( void ) :
+				type(ACTION_ERROR), status(500), reason("Internal Server Error"),
+				redirectURL(""), fsPath(""), mountUri(""), relPath(""), root(""),
+				autoindex(false), keepAlive(true),
+				cgiExt(""), cgiInterpreter(""),
+				uploadEnabled(false), uploadStore(""),
+				server(NULL), route(NULL)
+			{}
+		};
 
-    // Cookie/session utility (bonus-friendly):
-    // - If request has no "sid" cookie, create one and attach Set-Cookie.
-    // - Optionally update a tiny in-memory session counter.
-    static void attachSessionCookie(const Request& req, Response& res);
+		// Core entry point for routing decisions.
+		static Decision	decide( const Request &req, const ConfigParse &cfg );
 
-private:
-    // Helpers
-    static const ServerBlock* selectServer(const Request& req, const Config& cfg);
-    static const Route*       matchRoute(const std::string& uri, const ServerBlock* sb,
-                                         std::string& mountUriOut, std::string& relPathOut);
-    static bool               isMethodAllowed(const Request& req, const Route* r);
-    static bool               hasCgi(const Route* r, const std::string& relPath,
-                                     std::string& matchedExt, std::string& interp);
-    static bool               isDir(const std::string& p);
-    static bool               isFile(const std::string& p);
-    static bool               pathJoin(const std::string& base, const std::string& rel, std::string& out);
-    static bool               normalizePath(std::string in, std::string& out);
-    static std::string        guessMime(const std::string& path);
-    static std::string        autoindexHtml(const std::string& dir, const std::string& reqUri);
-    static std::string        getHeader(const Request& req, const std::string& key);
+		// Small helpers
+		static bool	normalizePath( std::string &in, std::string &out ); // Normalize path (remove .., ., duplicate slashes)
+		static bool	isMethodAllowed( const std::string &method, const std::map<std::string, std::string> *loc,
+									 std::string &allowHeaderOut ); // Check if method is allowed, populate Allow header if not
+		static const std::map<std::string, std::string>	selectServerByHost( const Request &req, const ConfigParse &cfg ); // Select server block by Host header
+		// Find the best matching location block for the request URI
+		static const std::map<std::string, std::string>	longestPrefix( const std::string &uri, const std::map<std::string, std::string> srv, std::string &mountOut, std::string &relOut );
 };
 
 #endif // ROUTER_HPP
