@@ -6,7 +6,7 @@
 /*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:18 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/03 14:58:31 by mcauchy-         ###   ########.fr       */
+/*   Updated: 2025/09/04 11:30:51 by mcauchy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <sys/stat.h>
 #include <chrono>
 
-class Upload
+class Upload : public StaticExec
 {
 	public :
 		// Produce an upload response (blocking I/O):
@@ -29,6 +29,6 @@ class Upload
 	static bool			isDir( const std::string& path );
 	static bool			invalidFilename( const std::string& name );
 	static std::string	joinPath( const std::string& dir, const std::string& file );
-	static std::string	generateUniqueFilename( const std::string& dir, const std::string& baseName );
+	static std::string	generateUniqueFilename( void );
 
 #endif
