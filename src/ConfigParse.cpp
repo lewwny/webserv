@@ -348,3 +348,15 @@ const std::vector<std::map<std::string, std::string> > &ConfigParse::getLocation
 		throw std::runtime_error("Location index out of range");
 	return _locations[index];
 }
+
+const std::string& ConfigParse::getErrorPagePath(const int code, size_t serverIndex) const {
+	if (serverIndex >= _locations.size())
+		throw std::runtime_error("Server index out of range");
+	for (std::map<std::string, std::string>::const_iterator it = _config[serverIndex].begin(); it != _config[serverIndex].end(); ++it) {
+		if (it->first == "error_page " + to_string98(code)) {
+			return it->second;
+		}
+	}
+	static std::string empty = "";
+	return empty;
+}
