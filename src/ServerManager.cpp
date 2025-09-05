@@ -212,10 +212,11 @@ void	ServerManager::handleRead( int fd )
 			// std::cout << "[DEBUG] outBuffer: " << std::endl << _conns[fd].outBuffer << std::endl;
 			
 			Router::Decision decision;
-			decision = Router::decide(req, _servers[_connFdToServerIndex[fd]]->getConfig(), *this);
+			decision = Router::decide(req, *this);
 			Response res;
 			switch (decision.type) {
 				case Router::ACTION_STATIC:
+					std::cout << "[Router] ACTION_STATIC for URI: " << req.getUri() << std::endl;
 					res = StaticExec::serveStatic(decision, _servers[_connFdToServerIndex[fd]]->getConfig());
 					break;
 				case Router::ACTION_REDIRECT:

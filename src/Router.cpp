@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:29:43 by macauchy          #+#    #+#             */
-/*   Updated: 2025/09/05 19:54:34 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/05 20:11:38 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ bool	Router::normalizePath( const std::string &in, std::string &out )
 	std::vector<std::string>	parts;	// to hold path segments
 	std::istringstream			iss(in);
 	std::string					token;
+	bool						isAbsolute = (!in.empty() && in[0] == '/');
 
 	// Split path by '/'
 	while (std::getline(iss, token, '/'))
@@ -68,8 +69,9 @@ bool	Router::normalizePath( const std::string &in, std::string &out )
 			// Backtrack one segment if possible
 			if (!parts.empty())
 				parts.pop_back();
-			else
-				return (false); // Attempt to go above root
+			else if (isAbsolute)
+				return (false); // Attempt to go above root for absolute paths
+			// For relative paths, allow going up
 		}
 		else
 		{
@@ -78,25 +80,38 @@ bool	Router::normalizePath( const std::string &in, std::string &out )
 	}
 	
 	// Reconstruct normalized path
-	out = "/";
+	if (isAbsolute)
+		out = "/";
+	else
+		out = "";
+		
 	for (size_t i = 0; i < parts.size(); ++i)
 	{
-		out += parts[i];
-		if (i + 1 < parts.size())
+		if (i > 0 || isAbsolute)
 			out += "/";
+		out += parts[i];
 	}
+	
+	// Handle edge case: if path was just "/" or empty, make sure we return something sensible
+	if (out.empty() && isAbsolute)
+		out = "/";
+	
 	return (true);
 }
 
-Router::Decision	Router::decide( const Request &req, const Config &cfg, const ServerManager &sm )
+Router::Decision	Router::decide( const Request &req, const ServerManager &sm )
 {
 	Decision	d;
 
 	d.server = &selectServer(req, sm)->getConfig();
 
-	// Match location
-	const Location	*loc = d.server->getLocationByPath(req.getUri());
-	if (!loc)
+	// Match location using prefix matching
+	std::string	mount, rel;
+	d.location = matchRoute(req.getUri(), selectServer(req, sm), mount, rel);
+	d.mountUri = mount;
+	d.relPath = rel;
+	
+	if (!d.location)
 	{
 		std::cerr << "[Router] No matching location found for URI: " << req.getUri() << std::endl;
 		d.type = ACTION_ERROR;
@@ -104,18 +119,10 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 		d.reason = "Not Found";
 		return (d);
 	}
-	d.location = loc;
-	d.mountUri = loc->getPath();
-	
-	// Relative path within location
-	std::string	mount, rel;
-	d.location = matchRoute(req.getUri(), selectServer(req, sm), mount, rel);
-	d.mountUri = mount;
-	d.relPath = rel;
 
 	// Check method
 	std::string	allowHeader;
-	if (!isMethodAllowed(req.getMethod(), loc, allowHeader))
+	if (!isMethodAllowed(req.getMethod(), d.location, allowHeader))
 	{
 		std::cerr << "[Router] Method not allowed: " << req.getMethod() << std::endl;
 		d.type = ACTION_ERROR;
@@ -125,8 +132,8 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 	}
 
 	// Body size check in location then server
-	long	maxBody = loc->getClientMaxBodySize() > 0 
-					? loc->getClientMaxBodySize() 
+	long	maxBody = d.location->getClientMaxBodySize() > 0 
+					? d.location->getClientMaxBodySize() 
 					: d.server->getClientMaxBodySize();
 	if (req.getBody().size() > static_cast<size_t>(maxBody))
 	{
@@ -139,7 +146,7 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 
 	// Determine filesystem path
 	std::string	path;
-	if (normalizePath(cfg.getRoot() + req.getUri(), path))
+	if (normalizePath(d.server->getRoot() + req.getUri(), path))
 	{
 		d.fsPath = path;
 	}
@@ -170,12 +177,18 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 		if (S_ISDIR(st.st_mode))
 		{
 			// Directory
-			if (!loc->getIndex().empty())
+			std::string indexFile;
+			if (!d.location->getIndex().empty())
+				indexFile = d.location->getIndex();
+			else if (!d.server->getIndex().empty())
+				indexFile = d.server->getIndex();
+			
+			if (!indexFile.empty())
 			{
-				d.fsPath += "/" + loc->getIndex();
+				d.fsPath += "/" + indexFile;
 				d.type = ACTION_STATIC;
 			}
-			else if (loc->isAutoindex())
+			else if (d.location->isAutoindex())
 			{
 				d.type = ACTION_AUTOINDEX;
 				d.autoindex = true;
@@ -200,11 +213,11 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 	}
 
 	// Upload
-	if (!loc->getUploadStore().empty() && req.getMethod() == "POST")
+	if (!d.location->getUploadStore().empty() && req.getMethod() == "POST")
 	{
 		d.type = ACTION_UPLOAD;
 		d.uploadEnabled = true;
-		d.uploadStore = loc->getUploadStore();
+		d.uploadStore = d.location->getUploadStore();
 	}
 
 	return (d);

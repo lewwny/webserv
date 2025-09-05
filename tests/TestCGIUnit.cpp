@@ -235,15 +235,14 @@ static void test_router_decision_structure() {
     ASSERT_EQ(decision.type, Router::ACTION_ERROR);
     
     // Test parameterized constructor
-    Router::Decision cgiDecision(
-        Router::ACTION_CGI,
-        "/var/www/cgi-bin/script.py",
-        "script.py",
-        "/cgi-bin/",
-        "/var/www",
-        ".py",
-        "/usr/bin/python3"
-    );
+    Router::Decision cgiDecision;
+    cgiDecision.type = Router::ACTION_CGI;
+    cgiDecision.fsPath = "/var/www/cgi-bin/script.py";
+    cgiDecision.relPath = "script.py";
+    cgiDecision.mountUri = "/cgi-bin/";
+    cgiDecision.root = "/var/www";
+    cgiDecision.cgiExt = ".py";
+    cgiDecision.cgiInterpreter = "/usr/bin/python3";
     
     std::cout << "[Expect] All fields properly initialized" << std::endl;
     ASSERT_EQ(cgiDecision.type, Router::ACTION_CGI);

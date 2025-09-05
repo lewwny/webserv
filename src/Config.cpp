@@ -15,7 +15,8 @@ Config::Config(const ConfigParse& configParse, size_t index) {
 	else
 		_index = serverConfig["index"];
 	if (serverConfig.find("root") == serverConfig.end())
-		_root = "/www"; // default root
+	// 	_root = "/www"; // default root
+		_root = "";
 	else
 		_root = serverConfig["root"];
 	_clientMaxBodySize = 1024 * 1024; // default 1MB
@@ -55,7 +56,6 @@ const Location* Config::getLocationByPath(const std::string& path) const {
 			std::cerr << "[Config] Location matched: " << path << std::endl;
 			std::cerr << "[Config] Location details:" << std::endl;
 			_locations[i].printLocation();
-			std::cout << "[Config] Checking if &locations[i] is valid: " << (&_locations[i] ? "valid" : "invalid") << std::endl;
 			return &_locations[i];
 		}
 	}

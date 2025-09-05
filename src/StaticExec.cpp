@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:11 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/05 19:36:13 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/05 20:15:48 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ Response	StaticExec::serveStatic(const Router::Decision& d, const Config &cfg)
 
 	if (!file)
 	{
+		std::cerr << "[StaticExec] File not found: " << d.fsPath << std::endl;
 		Router::Decision errorDecision;
 		errorDecision.status = 404;
 		errorDecision.reason = "Not Found";
@@ -130,6 +131,7 @@ Response	StaticExec::serveStatic(const Router::Decision& d, const Config &cfg)
 	res.setHeader("Content-Type", getContentType(d.fsPath));
 	res.setHeader("Content-Length", toString(body.str().size()));
 	res.setBody(body.str());
+	std::cout << "[StaticExec] Serving static file: " << body.str() << std::endl;
 	res.addSecurityHeaders();
 	return ( res );
 }

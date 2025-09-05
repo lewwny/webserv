@@ -58,7 +58,7 @@ public:
 	};
 
 	// Decide the action to perform. (No blocking I/O here.)
-	static Decision decide(const Request& req, const Config& cfg, const ServerManager &sm);
+	static Decision decide(const Request& req, const ServerManager &sm);
 
 	// Immediate producers (in-Router), no blocking on pipes:
 	static Response makeRedirect(const Decision& d);
