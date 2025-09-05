@@ -6,7 +6,7 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 11:17:35 by lengarci          #+#    #+#              #
-#    Updated: 2025/09/05 16:31:18 by macauchy         ###   ########.fr        #
+#    Updated: 2025/09/05 18:32:37 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,7 @@ clean:
 
 fclean:		clean
 		$(RM) $(NAME)
-		$(RM) $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_BIN) $(INTEGRATION_TEST_BIN)
+		$(RM) $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_BIN) $(INTEGRATION_TEST_BIN) $(INTEGRATION_ADVANCED_TEST_BIN)
 		@printf "\033[0;32m$(NAME) removed\033[0m\n"
 
 re:	fclean
@@ -66,12 +66,14 @@ REQUEST_TEST_BIN = tests/run_request_tests
 RESPONSE_TEST_BIN = tests/run_response_tests
 ROUTER_TEST_BIN = tests/run_router_tests
 INTEGRATION_TEST_BIN = tests/run_integration_tests
+INTEGRATION_ADVANCED_TEST_BIN = tests/run_integration_advanced_tests
 
 PARSER_TEST_SRC = tests/TestParser.cpp
 REQUEST_TEST_SRC = tests/TestRequest.cpp
 RESPONSE_TEST_SRC = tests/TestResponse.cpp
 ROUTER_TEST_SRC = tests/TestRouterSimple.cpp
 INTEGRATION_TEST_SRC = tests/TestIntegrationSimple.cpp
+INTEGRATION_ADVANCED_TEST_SRC = tests/TestIntegration.cpp
 
 $(PARSER_TEST_BIN): $(PARSER_TEST_SRC) src/Parser.cpp src/Request.cpp tests/test_harness.hpp
 	@mkdir -p tests
@@ -98,6 +100,11 @@ $(INTEGRATION_TEST_BIN): $(INTEGRATION_TEST_SRC) src/Parser.cpp src/Request.cpp 
 	$(CC) $(CFLAGS) -I./include -o $(INTEGRATION_TEST_BIN) $(INTEGRATION_TEST_SRC) src/Parser.cpp src/Request.cpp src/Response.cpp
 	@printf "\033[0;32mTests built: %s\033[0m\n" $(INTEGRATION_TEST_BIN)
 
+$(INTEGRATION_ADVANCED_TEST_BIN): $(INTEGRATION_ADVANCED_TEST_SRC) src/Parser.cpp src/Request.cpp src/Response.cpp tests/test_harness.hpp
+	@mkdir -p tests
+	$(CC) $(CFLAGS) -I./include -o $(INTEGRATION_ADVANCED_TEST_BIN) $(INTEGRATION_ADVANCED_TEST_SRC) src/Parser.cpp src/Request.cpp src/Response.cpp
+	@printf "\033[0;32mTests built: %s\033[0m\n" $(INTEGRATION_ADVANCED_TEST_BIN)
+
 testconfig: all
 		@printf "\033[0;33mTesting empty file:\033[0m\n"
 		@-./webserv conf/bad/empty.conf
@@ -122,7 +129,7 @@ testconfig: all
 		@-./webserv conf/bad/bad_errorpage.conf
 
 .PHONY:		all clean fclean re test testconfig test-verbose test-quiet
-test: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_BIN) $(INTEGRATION_TEST_BIN)
+test: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_BIN) $(INTEGRATION_TEST_BIN) $(INTEGRATION_ADVANCED_TEST_BIN)
 	@printf "\033[0;34mRunning parser tests:\033[0m\n"
 	./$(PARSER_TEST_BIN)
 	@printf "\033[0;34mRunning request tests:\033[0m\n"
@@ -133,8 +140,10 @@ test: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_
 	./$(ROUTER_TEST_BIN)
 	@printf "\033[0;34mRunning integration tests:\033[0m\n"
 	./$(INTEGRATION_TEST_BIN)
+	@printf "\033[0;34mRunning advanced integration tests:\033[0m\n"
+	./$(INTEGRATION_ADVANCED_TEST_BIN)
 
-test-verbose: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_BIN) $(INTEGRATION_TEST_BIN)
+test-verbose: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_BIN) $(INTEGRATION_TEST_BIN) $(INTEGRATION_ADVANCED_TEST_BIN)
 	@printf "\033[0;34mRunning parser tests (verbose):\033[0m\n"
 	./$(PARSER_TEST_BIN) --verbose
 	@printf "\033[0;34mRunning request tests (verbose):\033[0m\n"
@@ -145,14 +154,17 @@ test-verbose: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUT
 	./$(ROUTER_TEST_BIN) --verbose
 	@printf "\033[0;34mRunning integration tests (verbose):\033[0m\n"
 	./$(INTEGRATION_TEST_BIN) --verbose
+	@printf "\033[0;34mRunning advanced integration tests (verbose):\033[0m\n"
+	./$(INTEGRATION_ADVANCED_TEST_BIN) --verbose
 
-test-quiet: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_BIN) $(INTEGRATION_TEST_BIN)
+test-quiet: $(PARSER_TEST_BIN) $(REQUEST_TEST_BIN) $(RESPONSE_TEST_BIN) $(ROUTER_TEST_BIN) $(INTEGRATION_TEST_BIN) $(INTEGRATION_ADVANCED_TEST_BIN)
 	@printf "\033[0;34mRunning all tests (quiet mode):\033[0m\n"
 	./$(PARSER_TEST_BIN) --quiet
 	./$(REQUEST_TEST_BIN) --quiet
 	./$(RESPONSE_TEST_BIN) --quiet
 	./$(ROUTER_TEST_BIN) --quiet
 	./$(INTEGRATION_TEST_BIN) --quiet
+	./$(INTEGRATION_ADVANCED_TEST_BIN) --quiet
 
 help-test:
 	@printf "\033[0;33mTest targets:\033[0m\n"
