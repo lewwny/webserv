@@ -24,6 +24,7 @@
 #include "Parser.hpp"   // depends on P2
 #include "ConfigParse.hpp" // forward declaration removed, include the header
 #include "Config.hpp"
+#include "Router.hpp"   // depends on P2
 
 
 class Server

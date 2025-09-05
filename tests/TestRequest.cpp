@@ -26,8 +26,10 @@ static void test_request_body_append()
     ASSERT_EQ(r.getBody(), std::string("abcdef"));
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    parse_args(argc, argv);
+    
     RUN_TEST(test_request_basic);
     RUN_TEST(test_request_body_append);
     return finish_tests();

@@ -6,13 +6,13 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:16:16 by macauchy          #+#    #+#             */
-/*   Updated: 2025/09/01 17:43:56 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/05 16:31:18 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Request.hpp"
 
-Request::Request( void ) : _complete(false), _error(false), _errorCode(0)
+Request::Request( void ) : _listenPort(0), _complete(false), _error(false), _errorCode(0)
 {
 }
 
@@ -175,6 +175,16 @@ const std::string	&Request::getBody( void ) const
 const std::map<std::string, std::string> &Request::getHeaders( void ) const
 {
 	return (_headers);
+}
+
+int	Request::getPort( void ) const
+{
+	return (_listenPort);
+}
+
+void	Request::setPort( int port )
+{
+	_listenPort = port;
 }
 
 void	Request::reset( void )

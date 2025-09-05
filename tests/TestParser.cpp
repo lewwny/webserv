@@ -8,17 +8,21 @@ static void test_simple_get()
     Parser p;
     p.setLimits(8192, 1024*1024, 4096);
     std::string raw = "GET /hello HTTP/1.1\r\nHost: example.com\r\n\r\n";
-    std::cout << "[Test] Simple GET\n";
-    std::cout << "[Input]\n" << raw << std::endl;
-    std::cout << "[Expect] complete=true, path=/hello, host=example.com\n";
+    if (g_verbose) {
+        std::cout << "[Test] Simple GET" << std::endl;
+        std::cout << "[Input]\n" << raw << std::endl;
+        std::cout << "[Expect] complete=true, path=/hello, host=example.com" << std::endl;
+    }
     p.feed(raw);
     Request req = p.getRequest();
-    std::cout << "[Result] complete=" << (p.isComplete()?"true":"false")
-              << ", error=" << (req.getError()?"true":"false")
-              << ", code=" << req.getErrorCode()
-              << ", path=" << req.getPath()
-              << ", host=" << req.getHeader("host")
-              << ", body=" << req.getBody() << std::endl;
+    if (g_verbose) {
+        std::cout << "[Result] complete=" << (p.isComplete()?"true":"false")
+                  << ", error=" << (req.getError()?"true":"false")
+                  << ", code=" << req.getErrorCode()
+                  << ", path=" << req.getPath()
+                  << ", host=" << req.getHeader("host")
+                  << ", body=" << req.getBody() << std::endl;
+    }
     ASSERT_TRUE(p.isComplete());
     ASSERT_EQ(req.getPath(), std::string("/hello"));
     ASSERT_EQ(req.getHeader("host"), std::string("example.com"));
@@ -30,17 +34,21 @@ static void test_missing_host_http11()
     Parser p;
     p.setLimits(8192, 1024*1024, 4096);
     std::string raw = "GET / HTTP/1.1\r\n\r\n";
-    std::cout << "[Test] Missing Host (HTTP/1.1)\n";
-    std::cout << "[Input]\n" << raw << std::endl;
-    std::cout << "[Expect] error=true, code=400 (Missing Host)\n";
+    if (g_verbose) {
+        std::cout << "[Test] Missing Host (HTTP/1.1)" << std::endl;
+        std::cout << "[Input]\n" << raw << std::endl;
+        std::cout << "[Expect] error=true, code=400 (Missing Host)" << std::endl;
+    }
     p.feed(raw);
     Request req = p.getRequest();
-    std::cout << "[Result] complete=" << (p.isComplete()?"true":"false")
-              << ", error=" << (req.getError()?"true":"false")
-              << ", code=" << req.getErrorCode()
-              << ", path=" << req.getPath()
-              << ", host=" << req.getHeader("host")
-              << ", body=" << req.getBody() << std::endl;
+    if (g_verbose) {
+        std::cout << "[Result] complete=" << (p.isComplete()?"true":"false")
+                  << ", error=" << (req.getError()?"true":"false")
+                  << ", code=" << req.getErrorCode()
+                  << ", path=" << req.getPath()
+                  << ", host=" << req.getHeader("host")
+                  << ", body=" << req.getBody() << std::endl;
+    }
     ASSERT_TRUE(req.getError());
     ASSERT_EQ(req.getErrorCode(), 400);
 }
@@ -188,8 +196,10 @@ static void test_invalid_method()
     ASSERT_EQ(req.getErrorCode(), 405);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    parse_args(argc, argv);
+    
     RUN_TEST(test_simple_get);
     RUN_TEST(test_missing_host_http11);
     RUN_TEST(test_content_length_body);
