@@ -6,7 +6,7 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 11:17:35 by lengarci          #+#    #+#              #
-#    Updated: 2025/09/05 18:32:37 by macauchy         ###   ########.fr        #
+#    Updated: 2025/09/05 18:55:42 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ INTEGRATION_ADVANCED_TEST_BIN = tests/run_integration_advanced_tests
 PARSER_TEST_SRC = tests/TestParser.cpp
 REQUEST_TEST_SRC = tests/TestRequest.cpp
 RESPONSE_TEST_SRC = tests/TestResponse.cpp
-ROUTER_TEST_SRC = tests/TestRouterSimple.cpp
+ROUTER_TEST_SRC = tests/TestRouter.cpp
 INTEGRATION_TEST_SRC = tests/TestIntegrationSimple.cpp
 INTEGRATION_ADVANCED_TEST_SRC = tests/TestIntegration.cpp
 
