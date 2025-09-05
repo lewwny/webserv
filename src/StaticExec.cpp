@@ -3,14 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   StaticExec.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:11 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/05 10:25:24 by mcauchy-         ###   ########.fr       */
+/*   Updated: 2025/09/05 19:36:13 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "StaticExec.hpp"
+#include "../include/StaticExec.hpp"
+#include <sstream>
+#include <fstream>
+
+// C++98 compatible toString helper
+template<typename T>
+static std::string toString(T value) {
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
+}
+
+// Simple MIME type detection based on file extension
+static std::string getContentType(const std::string& path) {
+    size_t pos = path.find_last_of('.');
+    if (pos == std::string::npos) {
+        return "application/octet-stream";
+    }
+    
+    std::string ext = path.substr(pos);
+    if (ext == ".html" || ext == ".htm") return "text/html";
+    if (ext == ".css") return "text/css";
+    if (ext == ".js") return "application/javascript";
+    if (ext == ".json") return "application/json";
+    if (ext == ".png") return "image/png";
+    if (ext == ".jpg" || ext == ".jpeg") return "image/jpeg";
+    if (ext == ".gif") return "image/gif";
+    if (ext == ".txt") return "text/plain";
+    if (ext == ".pdf") return "application/pdf";
+    return "application/octet-stream";
+}
 
 
 /**
@@ -34,20 +64,21 @@ Response	StaticExec::makeRedirect(const Router::Decision& d)
 		<< "<p>You are being redirected to <a href=\"" << d.redirectURL << "\">" << d.redirectURL << "</a></p>"
 		<< "</body></html>";
 	res.setHeader("Content-Type", "text/html; charset=utf-8");
-	res.setHeader("Content-Length", std::to_string(body.str().size()));
+	res.setHeader("Content-Length", toString(body.str().size()));
 	res.setBody(body.str());
 	res.addSecurityHeaders(); // Protège contre certains types d’attaques
 	return ( res );
 }
 
-Response	StaticExec::makeError(const Router::Decision& d, const ConfigParse &cfg) 
+Response	StaticExec::makeError(const Router::Decision& d, const Config &cfg) 
 {
 	Response 			res;
 	std::ostringstream	body;
 	std::string			errorPage;
 
 	res.setStatus(d.status, d.reason);
-	errorPage = cfg.getErrorPagePath(d.status);
+	// For now, use server index 0 - this should be passed from the router decision in the future
+	errorPage = cfg.getErrorPage(d.status);
 	std::ifstream	file(errorPage.c_str(), std::ios::binary); // Ouvre le fichier en mode binaire
 	if (file)
 	{
@@ -65,7 +96,7 @@ Response	StaticExec::makeError(const Router::Decision& d, const ConfigParse &cfg
 			<< "</body></html>";
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
 	}
-	res.setHeader("Content-Length", std::to_string(body.str().size()));
+	res.setHeader("Content-Length", toString(body.str().size()));
 	res.setBody(body.str());
 	res.addSecurityHeaders();
 	return ( res );
@@ -79,7 +110,7 @@ Response	StaticExec::makeError(const Router::Decision& d, const ConfigParse &cfg
  */
 //  getContentType(const std::string& path) : une fonction qui retourne le type MIME
 // (ex : "text/html" pour .html, "image/png" pour .png).
-Response	StaticExec::serveStatic(const Router::Decision& d, const ConfigParse &cfg)
+Response	StaticExec::serveStatic(const Router::Decision& d, const Config &cfg)
 {
 	Response			res;
 	std::ifstream		file(d.fsPath.c_str(), std::ios::binary); // Sans ios::in/binary, les fichiers non-texte risquent d’être corrompus
@@ -97,7 +128,7 @@ Response	StaticExec::serveStatic(const Router::Decision& d, const ConfigParse &c
 	body << file.rdbuf();
 	res.setStatus(200, "OK");
 	res.setHeader("Content-Type", getContentType(d.fsPath));
-	res.setHeader("Content-Length", std::to_string(body.str().size()));
+	res.setHeader("Content-Length", toString(body.str().size()));
 	res.setBody(body.str());
 	res.addSecurityHeaders();
 	return ( res );

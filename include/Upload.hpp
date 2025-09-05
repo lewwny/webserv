@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Upload.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:18 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/05 09:35:31 by mcauchy-         ###   ########.fr       */
+/*   Updated: 2025/09/05 19:35:24 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,21 @@
 #include "Router.hpp"
 #include "Response.hpp"
 #include <sys/stat.h>
-#include <chrono>
+#include <ctime>
+#include <cstdlib>
 
-class Upload : public StaticExec
+class Upload
 {
 	public :
 		// Produce an upload response (blocking I/O):
 		static Response save(const Router::Decision& d, const Request& req);
+		
+	private:
+		static bool			isDir( const std::string& path );
+		static bool			getUploadDir( const std::string& dir ); // crée le répertoire s'il n'existe pas
+		static bool			invalidFilename( const std::string& name );
+		static std::string	joinPath( const std::string& dir, const std::string& file );
+		static std::string	generateUniqueFilename( void );
 };
-	
-	static bool			isDir( const std::string& path );
-	static bool			getUploadDir( const std::string& dir ); // crée le répertoire s'il n'existe pas
-	static bool			invalidFilename( const std::string& name );
-	static std::string	joinPath( const std::string& dir, const std::string& file );
-	static std::string	generateUniqueFilename( void );
 
 #endif

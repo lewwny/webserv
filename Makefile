@@ -6,7 +6,7 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 11:17:35 by lengarci          #+#    #+#              #
-#    Updated: 2025/09/05 18:55:42 by macauchy         ###   ########.fr        #
+#    Updated: 2025/09/05 19:25:33 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,10 @@ SRCS		=	main.cpp \
 				src/Router.cpp \
 				src/ConfigParse.cpp \
 				src/ServerManager.cpp \
-				src/Config.cpp
+				src/Config.cpp \
+				src/StaticExec.cpp \
+				src/Upload.cpp \
+				src/CGI.cpp
 OBJS		=	$(addprefix $(DIR_OBJ), $(SRCS:.cpp=.o))
 HEADER		=	include/Server.hpp \
 				include/Request.hpp \
@@ -34,7 +37,10 @@ HEADER		=	include/Server.hpp \
 				include/Router.hpp \
 				include/ConfigParse.hpp \
 				include/ServerManager.hpp \
-				include/Config.hpp
+				include/Config.hpp \
+				include/StaticExec.hpp \
+				include/Upload.hpp \
+				include/CGI.hpp
 
 all:		$(NAME)
 

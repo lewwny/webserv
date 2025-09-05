@@ -4,6 +4,8 @@
 #include "Config.hpp"
 #include "Server.hpp"
 #include "ConfigParse.hpp"
+#include "CGI.hpp"
+#include "StaticExec.hpp"
 
 struct Connection {
 	int fd;

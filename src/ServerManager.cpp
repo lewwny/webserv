@@ -191,6 +191,9 @@ void	ServerManager::handleRead( int fd )
 	// std::cout << "[Server] Received " << bytesRead << " bytes on fd " << fd << std::endl;
 	Parser parser;
 	parser.setLimits(8192, 1048576, 4096); // Example limits, should get them from server._config
+	// parser.setLimits(_servers[_connFdToServerIndex[fd]]->getConfig().getMaxHeaderBytes(),
+	// 				  _servers[_connFdToServerIndex[fd]]->getConfig().getClientMaxBodySize(),
+	// 				  _servers[_connFdToServerIndex[fd]]->getConfig().getMaxChunkSize());
 	if (parser.feed(_conns[fd].inBuffer))
 	{
 		Request req = parser.getRequest();
@@ -205,11 +208,33 @@ void	ServerManager::handleRead( int fd )
 			std::cerr << "[Server] Request parsed successfully, fd: " << fd << std::endl;
 			// Simple echo response for demonstration (TODO: real routing/handling)
 			std::string body = "You requested: " + req.getPath() + "\n";
-			_conns[fd].outBuffer = "HTTP/1.1 200 OK\r\nContent-Length: " + toString(body.length()) + "\r\n\r\n" + body;
-			std::cout << "[DEBUG] outBuffer: " << std::endl << _conns[fd].outBuffer << std::endl;
+			// _conns[fd].outBuffer = "HTTP/1.1 200 OK\r\nContent-Length: " + toString(body.length()) + "\r\n\r\n" + body;
+			// std::cout << "[DEBUG] outBuffer: " << std::endl << _conns[fd].outBuffer << std::endl;
+			
+			Router::Decision decision;
+			decision = Router::decide(req, _servers[_connFdToServerIndex[fd]]->getConfig(), *this);
+			Response res;
+			switch (decision.type) {
+				case Router::ACTION_STATIC:
+					res = StaticExec::serveStatic(decision, _servers[_connFdToServerIndex[fd]]->getConfig());
+					break;
+				case Router::ACTION_REDIRECT:
+					res = StaticExec::makeRedirect(decision);
+					break;
+				case Router::ACTION_ERROR:
+					res = StaticExec::makeError(decision, _servers[_connFdToServerIndex[fd]]->getConfig());
+					break;
+				case Router::ACTION_CGI:
+					res = CGI::run(decision, req);
+					break;
+				default:
+					res = StaticExec::makeError(decision, _servers[_connFdToServerIndex[fd]]->getConfig());
+					break;
+			}
+			_conns[fd].outBuffer = res.serialize();
 		}
 		_conns[fd].inBuffer.clear(); // Clear input buffer after processing
-		std::map<std::string, std::string> headers = req.getHeaders();
+		// std::map<std::string, std::string> headers = req.getHeaders();
 		// std::cout << "[DEBUG] Parsed Headers:" << std::endl;
 		// for (std::map<std::string, std::string>::iterator it = headers.begin(); it != headers.end(); ++it) {
 		// 	std::cout << it->first << ": " << it->second << std::endl;

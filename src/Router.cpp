@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:29:43 by macauchy          #+#    #+#             */
-/*   Updated: 2025/09/05 18:32:37 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/05 19:54:34 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 	const Location	*loc = d.server->getLocationByPath(req.getUri());
 	if (!loc)
 	{
+		std::cerr << "[Router] No matching location found for URI: " << req.getUri() << std::endl;
 		d.type = ACTION_ERROR;
 		d.status = 404;
 		d.reason = "Not Found";
@@ -116,6 +117,7 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 	std::string	allowHeader;
 	if (!isMethodAllowed(req.getMethod(), loc, allowHeader))
 	{
+		std::cerr << "[Router] Method not allowed: " << req.getMethod() << std::endl;
 		d.type = ACTION_ERROR;
 		d.status = 405;
 		d.reason = "Method Not Allowed";
@@ -128,6 +130,7 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 					: d.server->getClientMaxBodySize();
 	if (req.getBody().size() > static_cast<size_t>(maxBody))
 	{
+		std::cerr << "[Router] Payload too large: " << req.getBody().size() << " > " << maxBody << std::endl;
 		d.type = ACTION_ERROR;
 		d.status = 413;
 		d.reason = "Payload Too Large";
@@ -190,6 +193,7 @@ Router::Decision	Router::decide( const Request &req, const Config &cfg, const Se
 	else
 	{
 		// Path does not exist
+		std::cerr << "[Router] Path does not exist: " << d.fsPath << std::endl;
 		d.type = ACTION_ERROR;
 		d.status = 404;
 		d.reason = "Not Found";

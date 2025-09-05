@@ -50,7 +50,12 @@ Config::~Config() {}
 
 const Location* Config::getLocationByPath(const std::string& path) const {
 	for (size_t i = 0; i < _locations.size(); ++i) {
+		std::cerr << "[Config] Checking location: " << _locations[i].getPath() << " Against: " << path << std::endl;
 		if (_locations[i].getPath() == path) {
+			std::cerr << "[Config] Location matched: " << path << std::endl;
+			std::cerr << "[Config] Location details:" << std::endl;
+			_locations[i].printLocation();
+			std::cout << "[Config] Checking if &locations[i] is valid: " << (&_locations[i] ? "valid" : "invalid") << std::endl;
 			return &_locations[i];
 		}
 	}
