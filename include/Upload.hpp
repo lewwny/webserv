@@ -6,7 +6,7 @@
 /*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:18 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/04 11:30:51 by mcauchy-         ###   ########.fr       */
+/*   Updated: 2025/09/05 09:35:31 by mcauchy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Upload : public StaticExec
 };
 	
 	static bool			isDir( const std::string& path );
+	static bool			getUploadDir( const std::string& dir ); // crée le répertoire s'il n'existe pas
 	static bool			invalidFilename( const std::string& name );
 	static std::string	joinPath( const std::string& dir, const std::string& file );
 	static std::string	generateUniqueFilename( void );

@@ -6,19 +6,31 @@
 /*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:04 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/04 12:01:10 by mcauchy-         ###   ########.fr       */
+/*   Updated: 2025/09/05 09:46:34 by mcauchy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Upload.hpp"
 #include "StaticExec.hpp"
 
-static bool isDir( const std::string& path )
+static bool isDir( const std::string& path ) // vérifie si le path est un répertoire, but de stat : vérifier le type de fichier
 {
 	struct stat info;
 	if (stat(path.c_str(), &info) != 0)
 		return ( false );
 	return ( S_ISDIR(info.st_mode) );
+}
+
+static bool getUploadDir( const std::string& dir ) // crée le répertoire s'il n'existe pas
+{
+	if (dir.empty())
+		return ( false );
+	if (isDir(dir))
+		return ( true );
+	// Crée le répertoire avec les permissions rwxr-xr-x (755)
+	if (mkdir(dir.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) != 0)
+		return ( false );
+	return ( true );
 }
 
 static bool invalidFilename( const std::string& name )
@@ -69,7 +81,7 @@ static Response save(const Router::Decision& d, const Request& req)
 	Response			res;
 	std::string		uploadDir = d.uploadStore; // Contient le répertoire de stockage des uploads
 
-	if (uploadDir.empty() || !isDir(uploadDir))
+	if (uploadDir.empty() || !isDir(uploadDir)) // condition si le répertoire n'existe pas ou n'est pas configuré
 	{
 		res.setStatus(403, "Forbidden");
 		const std::string body = " Upload directory is not configured or does not exist.\n";
@@ -78,6 +90,17 @@ static Response save(const Router::Decision& d, const Request& req)
 		res.setHeader("Content-Type", "text/plain; charset=utf-8");
 		return ( res );
 	}
+	if (!getUploadDir(uploadDir)) // condition pour créer le répertoire s'il n'existe pas
+	{
+		res.setStatus(500, "Internal Server Error");
+		const std::string body = " Failed to create upload directory.\n";
+		res.setBody(body);
+		res.setHeader("Content-Length", std::to_string(body.size()));
+		res.setHeader("Content-Type", "text/plain; charset=utf-8"); // pas sur si utile
+		return ( res );
+	}
+	const std::string& filename = d.filename; // nom du fichier à sauvegarder, peut être vide
+	std::ofstream file(joinPath(uploadDir, filename), std::ios::binary);
 	if (req.getBody().empty())
 	{
 		res.setStatus(400, "Bad Request");
