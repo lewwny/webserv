@@ -83,19 +83,24 @@ void ServerManager::acceptConnection( int fd )
 {
 	int clientFd = accept(fd, NULL, NULL);
 	if (clientFd < 0)
-		throw std::runtime_error("Accept failed: " + std::string(strerror(errno)));
-	// fcntl to make socket non-blocking
-	if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0)
 	{
-		// do we need to throw here ?
-		close(clientFd);
-		// throw std::runtime_error("Fcntl failed: " + std::string(strerror(errno)));
+		std::cerr << "Accept error: " << strerror(errno) << std::endl;
+		return ;
 	}
+	// throw std::runtime_error("Accept failed: " + std::string(strerror(errno)));
+	// fcntl to make socket non-blocking
+	// if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0)
+	// {
+	// 	// do we need to throw here ?
+	// 	close(clientFd);
+	// 	// throw std::runtime_error("Fcntl failed: " + std::string(strerror(errno)));
+	// }
 	struct pollfd pfd;
 	pfd.fd = clientFd;
 	pfd.events = POLLIN;
 	pfd.revents = 0;
 	_pfds.push_back(pfd);
+
 	Connection conn;
 	conn.fd = clientFd;
 	_conns[clientFd] = conn;
@@ -129,11 +134,11 @@ void	ServerManager::handleWrite( int fd )
 	bytesSent = send(fd, _conns[fd].outBuffer.c_str(), _conns[fd].outBuffer.size(), 0);
 	if ( bytesSent < 0 )
 	{
-		if (errno != EWOULDBLOCK && errno != EAGAIN)
-		{
-			std::cerr << "Send error on fd " << fd << ": " << strerror(errno) << std::endl;
-			closeConnection(fd);
-		}
+		// if (errno != EWOULDBLOCK && errno != EAGAIN)
+		// {
+		// 	std::cerr << "Send error on fd " << fd << ": " << strerror(errno) << std::endl;
+		// 	closeConnection(fd);
+		// }
 		return;
 	}
 	if (bytesSent == 0)
@@ -165,11 +170,11 @@ void	ServerManager::handleRead( int fd )
 	bytesRead = recv(fd, buffer, sizeof(buffer), 0);
 	if (bytesRead < 0)
 	{
-		if (errno != EWOULDBLOCK && errno != EAGAIN)
-		{
-			std::cerr << "Recv error on fd " << fd << ": " << strerror(errno) << std::endl;
-			closeConnection(fd);
-		}
+		// if (errno != EWOULDBLOCK && errno != EAGAIN)
+		// {
+		// 	std::cerr << "Recv error on fd " << fd << ": " << strerror(errno) << std::endl;
+		// 	closeConnection(fd);
+		// }
 		return;
 	}
 	if (bytesRead == 0)

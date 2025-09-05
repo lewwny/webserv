@@ -141,6 +141,16 @@ Location::Location(const std::map<std::string, std::string>& locConf) {
 		_uploadStore = ""; // default no upload store
 	else
 		_uploadStore = it->second;
+	it = locConf.find("cgi_path");
+	if (it == locConf.end())
+		_cgiPath = ""; // default no cgi path
+	else
+		_cgiPath = it->second;
+	it = locConf.find("cgi_extension");
+	if (it == locConf.end())
+		_cgiExtension = ""; // default no cgi extension
+	else
+		_cgiExtension = it->second;
 }
 
 Location::~Location() {}
