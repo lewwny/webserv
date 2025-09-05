@@ -6,7 +6,7 @@
 /*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:04 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/05 09:46:34 by mcauchy-         ###   ########.fr       */
+/*   Updated: 2025/09/05 12:12:50 by mcauchy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ static Response save(const Router::Decision& d, const Request& req)
 		res.setBody(body);
 		res.setHeader("Content-Length", std::to_string(body.size()));
 		res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		res.addSecurityHeaders();
 		return ( res );
 	}
 	if (!getUploadDir(uploadDir)) // condition pour créer le répertoire s'il n'existe pas
@@ -97,31 +98,69 @@ static Response save(const Router::Decision& d, const Request& req)
 		res.setBody(body);
 		res.setHeader("Content-Length", std::to_string(body.size()));
 		res.setHeader("Content-Type", "text/plain; charset=utf-8"); // pas sur si utile
+		res.addSecurityHeaders();
 		return ( res );
 	}
-	const std::string& filename = d.filename; // nom du fichier à sauvegarder, peut être vide
-	std::ofstream file(joinPath(uploadDir, filename), std::ios::binary);
-	if (req.getBody().empty())
+	const std::string &data = req.getBody(); // recupere le contenu de la requête POST ( Si un client envoie une image, data contiendra tous les bytes de cette image
+	if (data.empty())
 	{
 		res.setStatus(400, "Bad Request");
 		const std::string body = " Request body is empty.\n";
 		res.setBody(body);
 		res.setHeader("Content-Length", std::to_string(body.size()));
 		res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		res.addSecurityHeaders();
 		return ( res );
 	}
-	std::string filename;
-	if ( d.filename.empty() )
-		filename = generateUniqueFilename();
-	else
-		filename = d.filename;
-	if (invalidFilename(filename))
+	std::string filename = generateUniqueFilename(); // génère un nom de fichier unique
+	std::string filePath = joinPath(uploadDir, filename); // crée le chemin complet du fichier en joignant le répertoire et le nom du fichier
+	if (invalidFilename(filename)) // vérifie si le nom de fichier est invalide
 	{
 		res.setStatus(500, "Internal Server Error");
 		const std::string body = " Generated filename is invalid.\n";
 		res.setBody(body);
 		res.setHeader("Content-Length", std::to_string(body.size()));
 		res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		res.addSecurityHeaders();
 		return ( res );
 	}
+	std::ofstream ofs(filePath.c_str(), std::ios::binary); // Ouvre le fichier en mode binaire (important pour les fichiers non-texte : PDF , images, etc.)
+	if (!ofs)
+	{
+		res.setStatus(500, "Internal Server Error");
+		const std::string body = " Failed to open file for writing.\n";
+		res.setBody(body);
+		res.setHeader("Content-Length", std::to_string(body.size()));
+		res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		res.addSecurityHeaders();
+		return ( res );
+	}
+	// Recevoir un corps de requête (POST) et l’enregistrer tel quel sur disque.
+	ofs.write(data.data(), static_cast<std::streamsize>(data.size())); // Écrit toutes les donnees brutes, même les null bytes (\0) + convertit en type attendu par write
+	if (ofs.fail())
+	{
+		res.setStatus(500, "Internal Server Error");
+		const std::string body = " Failed to write data to file.\n";
+		res.setBody(body);
+		res.setHeader("Content-Length", std::to_string(body.size()));
+		res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		res.addSecurityHeaders();
+		return ( res );
+	}
+	ofs.close();
+	res.setStatus(201, "Created");
+	std::ostringstream body;
+	body << "<!DOCTYPE html>"
+		<< "<html><head><title>"
+		<< "201 Created"
+		<< "</title></head><body>"
+		<< "<h1>File Uploaded Successfully</h1>"
+		<< "<p>File has been uploaded to: " << filePath << "</p>"
+		<< "</body></html>";
+
+	res.setBody(body.str());
+	res.setHeader("Content-Length", std::to_string(body.str().size()));
+	res.setHeader("Content-Type", "text/html; charset=utf-8");
+	res.addSecurityHeaders();
+	return ( res );
 }

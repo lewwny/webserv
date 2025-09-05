@@ -6,7 +6,7 @@
 /*   By: mcauchy- <mcauchy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:11 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/03 14:28:12 by mcauchy-         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:25:24 by mcauchy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ Response	StaticExec::makeRedirect(const Router::Decision& d)
 
 	res.setStatus(d.status, d.reason); // recuperer le code et le message de redirection. ex : 301 Moved Permanently
 	res.setHeader("Location", d.redirectURL); // ajouter le header Location avec l'URL de redirection
-	body << "<html><head><title>"
+	body << "<!DOCTYPE html>"
+		<< "<html><head><title>"
 		<< d.status << " " << d.reason
 		<< "</title></head><body>"
 		<< "<h1>Redirection</h1>"
@@ -55,7 +56,8 @@ Response	StaticExec::makeError(const Router::Decision& d, const ConfigParse &cfg
 	}
 	else
 	{
-		body << "<html><head><title>"
+		body << "<!DOCTYPE html>"
+			<< "<html><head><title>"
 			<< d.status << " " << d.reason
 			<< "</title></head><body>"
 			<< "<h1>Error " << d.status << ": " << d.reason << "</h1>"
