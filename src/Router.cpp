@@ -11,10 +11,12 @@
 /* ************************************************************************** */
 
 #include "../include/Router.hpp"
+#include "../include/Server.hpp"
+#include "../include/ServerManager.hpp"
 
 // No CTOR/DTOR needed, as Router is a static utility class.
 
-bool	isMethodAllowed( const std::string &method, const Location *loc, std::string &allowHeader )
+bool	Router::isMethodAllowed( const std::string &method, const Location *loc, std::string &allowHeader )
 {
 	std::vector<std::string>	allowed;
 

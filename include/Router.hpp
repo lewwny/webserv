@@ -8,11 +8,13 @@
 #include <string>
 #include <map>
 #include <sys/stat.h> // stat
-#include "Server.hpp"   // ServerBlock, Route
 #include "Parser.hpp"   // Request
 #include "Response.hpp" // Response
 #include "Config.hpp"   // Route, ServerBlock, Config
-#include "ServerManager.hpp"
+
+// Forward declarations to break circular dependencies
+class Server;
+class ServerManager;
 
 // The Router *does not* execute CGI or write uploads itself. It *decides* the action.
 // The event-loop (Server) will execute non-blocking actions (CGI pipes, disk streaming).
