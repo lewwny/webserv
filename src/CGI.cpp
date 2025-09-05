@@ -1,4 +1,12 @@
 #include "../include/CGI.hpp"
+#include <sstream>
+
+// C++98 compatible string conversion function
+static std::string size_to_string(size_t value) {
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
+}
 
 static void splitFsPathQuery(const std::string &fsPath, std::string &scriptPath, std::string &query) {
 	size_t pos = fsPath.find("?");
@@ -34,9 +42,9 @@ static std::string computePathInfo(const std::string &relPath, const std::string
 static std::string joinUrl(const std::string& a, const std::string& b) {
 	if (a.empty()) return b;
 	if (b.empty()) return a;
-	if (a.back() == '/' && b.front() == '/') {
+	if (a[a.size() - 1] == '/' && b[0] == '/') {
 		return a + b.substr(1);
-	} else if (a.back() != '/' && b.front() != '/') {
+	} else if (a[a.size() - 1] != '/' && b[0] != '/') {
 		return a + "/" + b;
 	} else {
 		return a + b;
@@ -62,13 +70,13 @@ static char **makeenv(const Router::Decision &d, const Request &req,
 	std::string pathTranslated;
 	if (!pathInfo.empty() && !d.root.empty()) {
 		pathTranslated = d.root;
-		if (!pathTranslated.empty() && pathTranslated.back() != '/') pathTranslated += '/';
+		if (!pathTranslated.empty() && pathTranslated[pathTranslated.size() - 1] != '/') pathTranslated += '/';
 		pathTranslated += pathInfo[0] == '/' ? pathInfo.substr(1) : pathInfo;
 	}
-	std::string serverProtocol = req.hasProtocol() ? req.getProtocol() : "HTTP/1.1";
-	std::string serverName     = req.hasServerName() ? req.getServerName() : "localhost";
-	std::string serverPort     = req.hasServerPort() ? req.getServerPort() : "80";
-	std::string remoteAddr     = req.hasRemoteAddr() ? req.getRemoteAddr() : "127.0.0.1";
+	std::string serverProtocol = "HTTP/1.1";
+	std::string serverName     = "localhost";
+	std::string serverPort     = "80";
+	std::string remoteAddr     = "127.0.0.1";
 	std::string contentLength = req.getHeader("Content-Length");
 	std::string contentType   = req.getHeader("Content-Type");
 
@@ -136,8 +144,8 @@ static bool parseCgiOutput(Response &res, const std::string &raw) {
 		if (line_end == std::string::npos)
 			line_end = header.size();
 		std::string line = header.substr(pos, line_end - pos);
-		if (!line.empty() && line.back() == '\r')
-			line.pop_back();
+		if (!line.empty() && line[line.size() - 1] == '\r')
+			line.erase(line.size() - 1);
 
 		if (!line.empty()) {
 			if (line.rfind("Status:", 0) == 0) {
@@ -168,7 +176,7 @@ static bool parseCgiOutput(Response &res, const std::string &raw) {
 	}
 
 	res.setBody(body);
-	res.setHeader("Content-Length", std::to_string(body.size()));
+	res.setHeader("Content-Length", size_to_string(body.size()));
 	return true;
 }
 
@@ -180,8 +188,7 @@ Response CGI::run(const Router::Decision &decision, const Request &req) {
 		res.setStatus(500, "Internal Server Error");
 		res.setBody("<html><body><h1>500 Internal Server Error</h1><p>CGI execution error: Invalid action type.</p></body></html>");
 		res.setHeader("Content-Type", "text/html");
-		res.setHeader("Content-Length", std::to_string(res.getBody().size()));
-		freeenv(env);
+		res.setHeader("Content-Length", size_to_string(res.getBody().size()));
 		return res;
 	}
 	std::string scriptPath, query;
@@ -288,14 +295,14 @@ Response CGI::run(const Router::Decision &decision, const Request &req) {
 		res.setStatus(500, "Internal Server Error");
 		res.setBody("<html><body><h1>500 Internal Server Error</h1><p>CGI execution error: No output from CGI script.</p></body></html>");
 		res.setHeader("Content-Type", "text/html");
-		res.setHeader("Content-Length", std::to_string(res.getBody().size()));
+		res.setHeader("Content-Length", size_to_string(res.getBody().size()));
 		return res;
 	}
 	if (!parseCgiOutput(res, raw)) {
 		res.setStatus(500, "Internal Server Error");
 		res.setBody("<html><body><h1>500 Internal Server Error</h1><p>CGI execution error: Malformed CGI output.</p></body></html>");
 		res.setHeader("Content-Type", "text/html");
-		res.setHeader("Content-Length", std::to_string(res.getBody().size()));
+		res.setHeader("Content-Length", size_to_string(res.getBody().size()));
 		return res;
 	}
 	// res.setStatus(200, "OK");
@@ -303,7 +310,7 @@ Response CGI::run(const Router::Decision &decision, const Request &req) {
 		res.setHeader("Content-Type", "text/html");
 	}
 	if (res.getHeaders()["Content-Length"].empty()) {
-		res.setHeader("Content-Length", std::to_string(res.getBody().size()));
+		res.setHeader("Content-Length", size_to_string(res.getBody().size()));
 	}
 	return res;
 }

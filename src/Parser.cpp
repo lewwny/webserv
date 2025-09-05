@@ -6,7 +6,7 @@
 /*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:15:59 by macauchy          #+#    #+#             */
-/*   Updated: 2025/09/05 15:32:16 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/09/05 16:29:13 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -395,7 +395,7 @@ std::string	Parser::_normalizePath( const std::string &rawPath ) const
 				else if (seg == "..")
 				{
 					if (!parts.empty())
-						parts.pop_back();
+						parts.erase(parts.end() - 1);
 					// if parts empty, stay at root (do not add empty)
 				}
 				else
