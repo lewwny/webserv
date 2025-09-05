@@ -9,6 +9,8 @@ private:
 	std::vector<std::string> _methods;
 	std::string _root;
 	std::string _index;
+	std::string _cgiPath;
+	std::string _cgiExtension;
 	bool _autoindex;
 	long _clientMaxBodySize;
 	std::string _uploadStore;
@@ -20,6 +22,8 @@ public:
 	const std::vector<std::string>& getMethods() const { return _methods; }
 	const std::string& getRoot() const { return _root; }
 	const std::string& getIndex() const { return _index; }
+	const std::string& getCgiPath() const { return _cgiPath; }
+	const std::string& getCgiExtension() const { return _cgiExtension; }
 	bool isAutoindex() const { return _autoindex; }
 	long getClientMaxBodySize() const { return _clientMaxBodySize; }
 	const std::string& getUploadStore() const { return _uploadStore; }

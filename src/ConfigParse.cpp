@@ -301,6 +301,12 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 		else if (_tokens[i].type != T_STRING && _tokens[i - 2].value == "error_page") {
 			throw std::runtime_error("Expected 2 string after 'error_page' at line " + to_string98(_tokens[i - 1].line));
 		}
+		if ((key == "server_name") && _tokens[i].type == T_STRING) {
+			while (i < _tokens.size() && _tokens[i].type == T_STRING) {
+				value += " " + _tokens[i].value;
+				i++;
+			}
+		}
 		if (i >= _tokens.size() || _tokens[i].type != T_SEMI)
 			throw std::runtime_error("Expected ';' after value '" + value + "' at line " + to_string98(_tokens[i - 1].line));
 		i++;
@@ -347,4 +353,16 @@ const std::vector<std::map<std::string, std::string> > &ConfigParse::getLocation
 	if (index >= _locations.size())
 		throw std::runtime_error("Location index out of range");
 	return _locations[index];
+}
+
+const std::string& ConfigParse::getErrorPagePath(const int code, size_t serverIndex) const {
+	if (serverIndex >= _locations.size())
+		throw std::runtime_error("Server index out of range");
+	for (std::map<std::string, std::string>::const_iterator it = _config[serverIndex].begin(); it != _config[serverIndex].end(); ++it) {
+		if (it->first == "error_page " + to_string98(code)) {
+			return it->second;
+		}
+	}
+	static std::string empty = "";
+	return empty;
 }

@@ -4,7 +4,7 @@ import sys
 import random
 
 def openfile() -> str:
-	with open("../../www/decouvrir.html", "r") as file:
+	with open("../decouvrir.html", "r") as file:
 		return file.read()
 
 def openprompt() -> str:
@@ -36,7 +36,7 @@ def main():
 		"<!-- texte ici-->",
 		"<p>" + response.text + "</p>"
 	)
-	sys.stdout.write("Content-Type: text/html\r\n\r\n")
+	sys.stdout.write("Content-Type:text/html\r\n\r\n")
 	sys.stdout.write(file_content)
 
 if __name__ == "__main__":
