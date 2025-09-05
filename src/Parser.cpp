@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:15:59 by macauchy          #+#    #+#             */
-/*   Updated: 2025/08/28 16:53:41 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/05 15:32:16 by lengarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,6 +335,11 @@ void	Parser::_parseHeaderBlock( const std::string &rawHeaders )
 			}
 			_chunked = true;
 		}
+		else if (k == "cookie")
+		{
+			_current.setHeader("cookie", value);
+		}
+
 	}
 	
 	// HTTP/1.1 requires Host header

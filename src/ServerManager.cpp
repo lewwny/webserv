@@ -203,6 +203,12 @@ void	ServerManager::handleRead( int fd )
 			std::cout << "[DEBUG] outBuffer: " << std::endl << _conns[fd].outBuffer << std::endl;
 		}
 		_conns[fd].inBuffer.clear(); // Clear input buffer after processing
+		std::map<std::string, std::string> headers = req.getHeaders();
+		// std::cout << "[DEBUG] Parsed Headers:" << std::endl;
+		// for (std::map<std::string, std::string>::iterator it = headers.begin(); it != headers.end(); ++it) {
+		// 	std::cout << it->first << ": " << it->second << std::endl;
+		// }
+		// std::cout << "[DEBUG] End of Headers" << std::endl;
 	}
 	else if (parser.isComplete() && !parser.getRequest().getError())
 	{
