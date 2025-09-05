@@ -301,6 +301,12 @@ void ConfigParse::parseServerBlock(size_t &i, size_t &serverCount) {
 		else if (_tokens[i].type != T_STRING && _tokens[i - 2].value == "error_page") {
 			throw std::runtime_error("Expected 2 string after 'error_page' at line " + to_string98(_tokens[i - 1].line));
 		}
+		if ((key == "server_name") && _tokens[i].type == T_STRING) {
+			while (i < _tokens.size() && _tokens[i].type == T_STRING) {
+				value += " " + _tokens[i].value;
+				i++;
+			}
+		}
 		if (i >= _tokens.size() || _tokens[i].type != T_SEMI)
 			throw std::runtime_error("Expected ';' after value '" + value + "' at line " + to_string98(_tokens[i - 1].line));
 		i++;
