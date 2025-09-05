@@ -11,8 +11,6 @@ private:
 	std::vector<std::string> _methods;
 	std::string _root;
 	std::string _index;
-	std::string _cgiPath;
-	std::string _cgiExtension;
 	bool _autoindex;
 	long _clientMaxBodySize;
 	std::string _uploadStore;
