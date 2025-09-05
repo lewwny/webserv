@@ -23,6 +23,7 @@ public:
 	static void handleSignal(int signum);
 	static void setInstance(ServerManager* instance) { _instance = instance; }
 	void requestShutdown() { _serverShutdown = true; }
+	const std::vector<Server*>& getServers() const { return _servers; }
 private:
 	std::vector<Server*> _servers;
 	size_t _serverCount;

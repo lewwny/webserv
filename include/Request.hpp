@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 11:43:17 by macauchy          #+#    #+#             */
-/*   Updated: 2025/09/01 17:44:01 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/05 15:19:37 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class Request
 		void	setVersion( const std::string& version );
 		void	setPath( const std::string& path );
 		void	setQuery( const std::string& query );
+		void	setPort( int port );
 		void	appendToBody( const std::string& data );
 		void	setError( void );
 		void	setErrorCode( int code );
@@ -63,12 +64,15 @@ class Request
 		const std::string	&getBody( void ) const;
 		const std::map<std::string, std::string> &getHeaders( void ) const;
 
+		int			getPort( void ) const;
+
 	private:
 		std::string	_method;	// GET, POST, DELETE, etc.
 		std::string	_uri;		// /index.html?user=42
 		std::string	_path;		// /index.html split from _uri
 		std::string	_query;		// user=42 split from _uri
 		std::string	_version;	// HTTP/1.1
+		int			_listenPort;// port number
 
 		std::map<std::string, std::string>	_headers;	// Host, User-Agent, etc.
 		std::string	_body;								// body of the request (for POST, etc.)

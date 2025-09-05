@@ -194,6 +194,7 @@ void	ServerManager::handleRead( int fd )
 	if (parser.feed(_conns[fd].inBuffer))
 	{
 		Request req = parser.getRequest();
+		req.setPort(_servers[_connFdToServerIndex[fd]]->getConfig().getPort());
 		if (req.getError())
 		{
 			// Handle request error
