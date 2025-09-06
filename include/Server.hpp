@@ -26,6 +26,9 @@
 #include "Config.hpp"
 #include "Router.hpp"   // depends on P2
 
+#define RED "\033[1;31m"
+#define GREEN "\033[1;32m"
+#define RESET "\033[0m"
 
 class Server
 {

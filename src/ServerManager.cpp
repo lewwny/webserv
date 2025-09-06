@@ -108,7 +108,7 @@ void ServerManager::acceptConnection( int fd )
 	if (it != _listenFdToServerIndex.end()) {
 		_connFdToServerIndex[clientFd] = it->second;
 	}
-	std::cout << "[Server] New connection accepted, fd: " << clientFd << std::endl;
+	std::cout << GREEN << "[Server] New connection accepted, fd: " << clientFd << RESET << std::endl;
 }
 
 void ServerManager::closeConnection(int fd)
@@ -124,7 +124,7 @@ void ServerManager::closeConnection(int fd)
 			break ;
 		}
 	}
-	std::cout << "[Server] Connection closed, fd: " << fd << std::endl;
+	std::cout << GREEN << "[Server] Connection closed, fd: " << fd << RESET << std::endl;
 }
 
 void	ServerManager::handleWrite( int fd )
@@ -143,7 +143,7 @@ void	ServerManager::handleWrite( int fd )
 	}
 	if (bytesSent == 0)
 	{
-		std::cout << "[Server] Connection closed by peer, fd: " << fd << std::endl;
+		// std::cout << "[Server] Connection closed by peer, fd: " << fd << std::endl;
 		closeConnection(fd);
 		return;
 	}
@@ -179,7 +179,7 @@ void	ServerManager::handleRead( int fd )
 	}
 	if (bytesRead == 0)
 	{
-		std::cout << "[Server] Connection closed by peer, fd: " << fd << std::endl;
+		// std::cout << "[Server] Connection closed by peer, fd: " << fd << std::endl;
 		closeConnection(fd);
 		return;
 	}
@@ -205,7 +205,7 @@ void	ServerManager::handleRead( int fd )
 		}
 		else
 		{
-			std::cerr << "[Server] Request parsed successfully, fd: " << fd << std::endl;
+			std::cout << GREEN << "[Server] Request parsed successfully, fd: " << fd << RESET << std::endl;
 			// Simple echo response for demonstration (TODO: real routing/handling)
 			std::string body = "You requested: " + req.getPath() + "\n";
 			// _conns[fd].outBuffer = "HTTP/1.1 200 OK\r\nContent-Length: " + toString(body.length()) + "\r\n\r\n" + body;

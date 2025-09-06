@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Router.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lenygarcia <lenygarcia@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:29:43 by macauchy          #+#    #+#             */
-/*   Updated: 2025/09/05 20:11:38 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/06 13:08:34 by lenygarcia       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ Router::Decision	Router::decide( const Request &req, const ServerManager &sm )
 	else
 	{
 		// Path does not exist
-		std::cerr << "[Router] Path does not exist: " << d.fsPath << std::endl;
+		std::cerr << RED << "[Router] Path does not exist: " << d.fsPath << RESET << std::endl;
 		d.type = ACTION_ERROR;
 		d.status = 404;
 		d.reason = "Not Found";

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   StaticExec.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lenygarcia <lenygarcia@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:28:11 by mcauchy-          #+#    #+#             */
-/*   Updated: 2025/09/05 20:15:48 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/09/06 13:03:57 by lenygarcia       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ Response	StaticExec::serveStatic(const Router::Decision& d, const Config &cfg)
 	res.setHeader("Content-Type", getContentType(d.fsPath));
 	res.setHeader("Content-Length", toString(body.str().size()));
 	res.setBody(body.str());
-	std::cout << "[StaticExec] Serving static file: " << body.str() << std::endl;
+	// std::cout << "[StaticExec] Serving static file: " << body.str() << std::endl;
 	res.addSecurityHeaders();
 	return ( res );
 }

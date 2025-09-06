@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lengarci <lengarci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lenygarcia <lenygarcia@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/09/04 09:13:31 by lengarci         ###   ########.fr       */
+/*   Updated: 2025/09/06 13:05:16 by lenygarcia       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,5 @@ void Server::init( void )
 	std::cout << "[Server] Listening on " << port << std::endl;
 	_host = host;
 	_port = port;
-	std::cout << "[DEBUG] Host: " << _host << ", Port: " << _port << ", listen fd: " << _listenFd << std::endl;
+	// std::cout << "[DEBUG] Host: " << _host << ", Port: " << _port << ", listen fd: " << _listenFd << std::endl;
 }
